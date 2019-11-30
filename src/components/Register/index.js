@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import { TextArea, TextInput, RadioGroup, Select, Checkbox, CheckboxSingle } from '../../util/formik-bootstrap-controls'
 
 import userService from '../../services/UserService'
+import ErrorMessage from '../ErrorMessage'
 
 const RegisterPage = () => (
     <div>
@@ -96,7 +97,7 @@ class RegisterForm extends React.Component {
                             .registerWithEmailAndPassword(email, passwordOne)
                             
                             .then(authUser => {
-                                console.log("1");
+                                
                                 userService.createUser(
                                     authUser.user.uid,
                                     email,
@@ -104,11 +105,6 @@ class RegisterForm extends React.Component {
                                     about
                                 );
                                 
-                            })
-                            .then(() => {
-                                console.log("2");
-                            //     return userService
-                            //         .loginWithEmailAndPassword(email, passwordOne)
                             })
                             .then(() => {
                                 console.log("3");
@@ -132,7 +128,7 @@ class RegisterForm extends React.Component {
                     const {error} = this.state;
                     return (
                         <>
-                        {error?<Alert danger>{error.message}</Alert>:null}
+                        {error?<Alert danger><ErrorMEssage error={error}/></Alert>:null}
 
                             <Form>
                                 <fieldset className="form-group">

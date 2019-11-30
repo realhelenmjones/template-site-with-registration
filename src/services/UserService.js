@@ -54,6 +54,7 @@ import firebase,{auth, db} from '../util/Firebase';
 
   }
 
+  
  const userService = {
   onAuthStateChanged,
   registerWithEmailAndPassword,

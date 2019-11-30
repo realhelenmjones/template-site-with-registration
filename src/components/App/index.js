@@ -41,7 +41,7 @@ const Header = () => (
   <AuthUserContext.Consumer>
      {authUser =>
   <React.Fragment>    
-    <h1 style={{backgroundColor:'black', color:'white', textAlign:'center', marginBottom:'0px'}}>Helen M Jones</h1>  
+    <h1 style={{backgroundColor:'black', color:'white', textAlign:'center', marginBottom:'0px'}}>{JSON.stringify(authUser)}</h1>  
    <Navbar expand="lg" dark bg="dark" mb="3">
         {/* <Navbar.Brand href="#"><img src="/images/profile.png" /><br /></Navbar.Brand> */}
         <Navbar.Toggler target="#navbarColor1" />

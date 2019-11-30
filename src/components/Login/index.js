@@ -3,7 +3,8 @@ import { withRouter, Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import { Form, Button } from 'bootstrap-4-react';
 
-import { RegisterLink } from '../Register';
+
+import { ErrorMessage } from '../ErrorMessage';
 import userService from '../../services/UserService'
 import * as ROUTES from '../../constants/routes';
 
@@ -81,7 +82,7 @@ class LoginFormBase extends Component {
         </Form.Group>
 
         <Button primary type="submit" disabled={this.isInvalid()}> Login</Button>
-        {error && <p>{error.message}</p>}
+        {error && <p><ErrorMessage error={error} /></p>}
       </Form>
     );
   }
