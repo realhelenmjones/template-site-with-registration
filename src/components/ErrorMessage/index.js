@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+
 
 const ErrorMessage = ({ error }) => {
     if (error.code === 'auth/weak-password') {
@@ -19,6 +20,9 @@ const ErrorMessage = ({ error }) => {
     else if (error.code === 'auth/wrong-password') {
         return 'Login details are incorrect';
     }
+    else if (error.code.indexOf('network')>-1) {
+        return 'A network error has occurred';
+    }    
     else {
         return error.message;
     }

@@ -1,11 +1,10 @@
 import React from "react";
-import { Link } from 'react-router-dom';
 import {Route, Redirect} from 'react-router-dom'
 
 
 
-import { AuthUserContext } from '../../components/Session';
-import { renderComponent } from "recompose";
+import { AuthUserContext } from '../Session';
+import ConfirmEmailAddress from '../../components/Register/please-confirm-email'
 
 
 const PrivateRoute = ({component:Component, ...props}) => (
@@ -13,7 +12,9 @@ const PrivateRoute = ({component:Component, ...props}) => (
      <AuthUserContext.Consumer>
         {authUser =>
           authUser ? 
+          authUser.emailVerified ?
           <Route {...props} render={(innerProps)=> <Component {...innerProps}/>} />  
+          :<Route {...props} render={(innerProps)=> <ConfirmEmailAddress emailAddress={authUser.emailAddress} {...innerProps}/>} />  
           : 
           <Route {...props} render={(innerProps)=> <Redirect to="/login"/>} />
         }

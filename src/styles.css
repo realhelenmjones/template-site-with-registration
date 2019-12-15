@@ -4,8 +4,37 @@
 }
 
 .container {
-  margin-top:50px;
+  margin-top:40px;
 }
+
+.titleBar{
+/* background-color:#ec7a08; */
+background-color:#393f44;
+margin-bottom:0px;
+padding:10px;
+color:#eee;
+font-size:20px
+}
+
+.titleBar a {
+  /* color:#ec7a08; */
+  color: #00b9e4;
+  /* color: #007bff; */
+}
+
+.titleBar a:hover{
+  /* color:#f39d3c; */
+ color:#008bad;
+  text-decoration: none;
+}
+
+/* ._loading_overlay_overlay{
+  background: rgba(125, 125, 125, 0.5);
+} */
+
+/* fieldset legend{
+  border-bottom:1px solid #0d0;
+} */
 
  /* fieldset 
 {

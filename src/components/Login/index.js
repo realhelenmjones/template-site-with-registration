@@ -4,13 +4,12 @@ import { compose } from 'recompose';
 import { Form, Button } from 'bootstrap-4-react';
 
 
-import { ErrorMessage } from '../ErrorMessage';
+import ErrorMessage from '../ErrorMessage';
 import userService from '../../services/UserService'
-import * as ROUTES from '../../constants/routes';
+import * as ROUTES from '../../constants';
 
 const LoginPage = () => (
   <div>
-    <h1>Login</h1>
     <LoginForm />
     <p>
         Don't have an account? <Link to={ROUTES.REGISTER}>Register</Link>
@@ -53,7 +52,7 @@ class LoginFormBase extends Component {
   };
 
   isInvalid(){
-    const { email, password, error } = this.state;
+    const { email, password } = this.state;
     return password === '' || email === '';
   }
 

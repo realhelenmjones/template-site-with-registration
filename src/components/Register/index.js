@@ -1,6 +1,7 @@
 import React from 'react';
 import { compose } from 'recompose';
-import { Button, Alert } from 'bootstrap-4-react';
+import { withRouter } from 'react-router-dom';
+import Bootstrap, { Button, Alert } from 'bootstrap-4-react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 
@@ -8,10 +9,16 @@ import { TextArea, TextInput, RadioGroup, Select, Checkbox, CheckboxSingle } fro
 
 import userService from '../../services/UserService'
 import ErrorMessage from '../ErrorMessage'
+import {AlertModal} from '../Modals'
+import * as ROUTES from '../../constants';
+
+import SpinnerOverlay from '../../util/SpinnerOverlay'
+
+import RegisterSuccessPage from './register-success'
+
 
 const RegisterPage = () => (
     <div>
-        <h1>Register</h1>
         <RegisterForm />
     </div>
 );
@@ -52,42 +59,58 @@ const sportOptions = [
 
 const VALIDATION_SCHEMA = {
     email: Yup.string().email()
-        .required(''),
+        .required('Required'),
     passwordOne: Yup.string()
-        .required(''),
+        .required('Required'),
     passwordTwo: Yup.string()
-        .required('')
+        .required('Required')
         .oneOf([Yup.ref('passwordOne'), null], 'Passwords must match'),
-    about: Yup.string()
-        .required(''),
-    gender: Yup.string()
+    username: Yup.string()
         .required('Required'),
-    age: Yup.string()
-        .ensure()
-        .required(""),
-    sports: Yup.string()
-        .required('Required'),
+    about: Yup.string(),
+        // .required('Required'),
+    gender: Yup.string(),
+        // .required('Required'),
+    age: Yup.string(),
+        // .required("Required"),
+    sports: Yup.string(),
+        // .required('Required'),
     acceptedTerms: Yup.string()
         .required('You must accept the terms and conditions')
 }
 
-class RegisterForm extends React.Component {
+const INITIAL_STATE = {
+    error: null,
+    loading: false
+};
 
-    constructor(props){
+class RegisterFormBase extends React.Component {
+    
+    constructor(props) {
         super(props);
-        this.state={};
+        this.state = {};
+    }
+
+    componentDidUpdate(){
+        if (this.state.error){
+          //  Bootstrap.modal('#registerError', {});
+          window.scrollTo(0,0);
+        }
     }
 
     render() {
-        
+        const { error, loading } = this.state;
         return (
+          <SpinnerOverlay loading={loading}>
+      <div style={{padding:'10px'}}>
             <Formik
                 initialValues={INITIAL_FORM_VALUES}
                 validationSchema={Yup.object().shape(VALIDATION_SCHEMA)}
                 onSubmit={(values, { setSubmitting, setFieldTouched }) => {
-                    const { email, passwordOne, name, about } = values;
+                    const { email, passwordOne, name, about, username } = values;
                     console.log("SUBMIT:" + JSON.stringify(values));
-                    // return;
+                    
+                    this.setState({ loading:true, error:null });
 
                     setTimeout(() => {
 
@@ -95,40 +118,61 @@ class RegisterForm extends React.Component {
 
                         userService
                             .registerWithEmailAndPassword(email, passwordOne)
-                            
+
                             .then(authUser => {
-                                
-                                userService.createUser(
+                                //TODO -- this will change each app
+                                // userService.createMigratableUser(
+                                //     authUser.user.uid,
+                                //     email,
+                                //     encodePassword()
+                                // );
+console.log('create my user');
+                               
+                               return userService.createUser(
                                     authUser.user.uid,
                                     email,
-                                    name,
-                                    about
+                                    username
                                 );
                                 
+                                //eveything else on top of user
+                                // userService.createProfile(
+                                //     authUser.user.uid,
+                                //     email,
+                                //     username
+                                // );
+                                //
+                                // OR
+                                // cvnService.createCvn(location)
+
                             })
                             .then(() => {
-                                console.log("3");
-                                userService.findUsers();
-                                alert('registered and logged in');
+                                return userService.doSendEmailVerification();
+                              })
+                            .then(() => {
+                                this.setState({ ...INITIAL_STATE });
+                                this.props.history.push(ROUTES.REGISTER_SUCCESS);
+                                
                             })
 
                             .catch(error => {
                                 //TODO error message about invalid data needs to be displayed on the form. Can it be displayed against the 
                                 //form fields that are invalid e.e. password is not valid.
                                 console.log("Error"); console.log(error);
-                                this.setState({ error });
+                                this.setState({ error, loading:false });
+                                
                             });
 
 
 
-                    }, 400);
+                    }, 3000);
                 }}
             >
-                {({ }) => {
-                    const {error} = this.state;
+                {() => {
+                    
                     return (
                         <>
-                        {error?<Alert danger><ErrorMEssage error={error}/></Alert>:null}
+                            {error ? <Alert danger><ErrorMessage error={error} /></Alert> : null}
+                            {loading ? <Alert primary>LOADING .....</Alert> : null} 
 
                             <Form>
                                 <fieldset className="form-group">
@@ -138,6 +182,8 @@ class RegisterForm extends React.Component {
                                     <TextInput type="password" name="passwordOne" label="Password" />
 
                                     <TextInput type="password" name="passwordTwo" label="Confirm Password" />
+
+                                    <TextInput type="text" name="username" label="Username/Handle" />
 
                                 </fieldset>
 
@@ -161,19 +207,28 @@ class RegisterForm extends React.Component {
 
                                 </fieldset>
 
-                                <Button primary type="submit">Register</Button>
+                                <Button primary type="submit" disabled={loading}>Register</Button>
 
                             </Form>
                         </>
                     );
                 }}
             </Formik>
+            {error?
+            <AlertModal id="registerError" title=""><Alert danger><ErrorMessage error={error} /></Alert></AlertModal>
+            : null}
+            </div>
+            </SpinnerOverlay>
         )
     }
 
 }
 
 
+const RegisterForm = compose(
+    withRouter
+)(RegisterFormBase);
+
 export default RegisterPage;
 
-export { RegisterForm };
+export { RegisterSuccessPage };

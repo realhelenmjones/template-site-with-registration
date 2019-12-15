@@ -16,8 +16,11 @@ const withAuthentication = Component => {
     componentDidMount() {
         this.listener = userService.onAuthStateChanged(
         authUser => {
+
           if (authUser){
-            this.setState({ authUser });
+            const user = userService.findUser(authUser.user.uid);
+            user.emailVerified = authUser.emailVerified;
+            this.setState({ authUser:user });
           }else{
             this.setState({ authUser: null });
           }

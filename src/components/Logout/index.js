@@ -3,14 +3,11 @@ import { withRouter, Redirect } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import userService from '../../services/UserService'
-import * as ROUTES from '../../constants/routes';
+import * as ROUTES from '../../constants';
 
 class LogoutPageBase extends Component {
 
-    constructor(props){
-        super(props);
-    }
-
+    
     componentWillMount() {
         userService.logout(); 
         //todo               

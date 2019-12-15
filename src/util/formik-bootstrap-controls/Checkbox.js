@@ -7,7 +7,7 @@ import { Form } from 'bootstrap-4-react'
 const Checkbox = ({ name, options }) => {
   const [field, meta] = useField({ name, type: "checkbox" });
   const isError = meta.touched && meta.error;
-  const valid = isError ? false : '';
+ 
   return (
     <Form.Group>
       {options.map(option => {
