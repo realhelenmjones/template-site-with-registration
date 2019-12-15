@@ -13,12 +13,12 @@ const withAuthentication = Component => {
       };
     }
 
-    componentDidMount() {
+    componentDidMount() {console.log("withAuthentication mounted");
         this.listener = userService.onAuthStateChanged(
         authUser => {
-
+        console.log("logged on"); console.log(authUser);
           if (authUser){
-            const user = userService.findUser(authUser.user.uid);
+            const user = userService.findUser(authUser.uid);console.log(user);
             user.emailVerified = authUser.emailVerified;
             this.setState({ authUser:user });
           }else{

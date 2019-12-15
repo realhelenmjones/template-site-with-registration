@@ -5,7 +5,7 @@ import {CONFIRMATION_EMAIL_REDIRECT} from '../constants'
 
 
 
-const onAuthStateChanged = () => auth.onAuthStateChanged;
+const onAuthStateChanged = (cb) => auth.onAuthStateChanged(cb);
 
 const registerWithEmailAndPassword = (email, password) =>
   auth.createUserWithEmailAndPassword(email, password);

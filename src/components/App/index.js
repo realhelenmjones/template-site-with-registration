@@ -36,7 +36,7 @@ const Main = () => (
         <Route path={ROUTES.LOGIN} component={LoginPage} />
         <Route path={ROUTES.LOGOUT} component={LogoutPage} />
         <Route exact path={ROUTES.HOME} component={HomePage} />
-        {/* <PrivateRoute path={ROUTES.ACCOUNT} component={AccountPage} />       */}
+        <PrivateRoute path={ROUTES.ACCOUNT} component={AccountPage} />      
         {/* {TODO PrivateRoute} */}
         <Route path={ROUTES.REGISTER_SUCCESS} component={RegisterSuccessPage} />      
   </Container>

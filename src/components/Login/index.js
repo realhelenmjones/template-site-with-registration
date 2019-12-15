@@ -18,8 +18,8 @@ const LoginPage = () => (
 );
 
 const INITIAL_STATE = {
-  email: '',
-  password: '',
+  email: 'bluewaterblue@hotmail.com',
+  password: 'aaaaaaaa1q',
   error: null,
 };
 
@@ -41,7 +41,7 @@ class LoginFormBase extends Component {
 
     userService
       .loginWithEmailAndPassword(email, password)
-      .then(() => {
+      .then(() => {console.log("jhjhjhjhjhjh");
         this.props.history.push(ROUTES.ACCOUNT);
       })
       .catch(error => {

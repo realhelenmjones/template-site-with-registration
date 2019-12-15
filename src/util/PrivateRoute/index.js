@@ -12,9 +12,10 @@ const PrivateRoute = ({component:Component, ...props}) => (
      <AuthUserContext.Consumer>
         {authUser =>
           authUser ? 
-          authUser.emailVerified ?
+          authUser.emailVerified ? 
           <Route {...props} render={(innerProps)=> <Component {...innerProps}/>} />  
-          :<Route {...props} render={(innerProps)=> <ConfirmEmailAddress emailAddress={authUser.emailAddress} {...innerProps}/>} />  
+          : 
+          <Route {...props} render={(innerProps)=> <ConfirmEmailAddress emailAddress={authUser.emailAddress} {...innerProps}/>} />  
           : 
           <Route {...props} render={(innerProps)=> <Redirect to="/login"/>} />
         }
