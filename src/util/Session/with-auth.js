@@ -2,6 +2,8 @@ import React from 'react';
 import AuthUserContext from './context';
 import userService from '../../services/UserService'
 
+import {c_log} from '../../util/logger'
+
 
 const withAuthentication = Component => {
   class WithAuthentication extends React.Component {
@@ -13,13 +15,17 @@ const withAuthentication = Component => {
       };
     }
 
-    componentDidMount() {console.log("withAuthentication mounted");
+    componentDidMount() {c_log("withAuthentication mounted");
         this.listener = userService.onAuthStateChanged(
         authUser => {
-        console.log("logged on"); console.log(authUser);
+        c_log("with_auth detected onAuthStateChanged"); c_log(authUser);
           if (authUser){
-            const user = userService.findUser(authUser.uid);console.log(user);
-            user.emailVerified = authUser.emailVerified;
+            const user = {
+              email : authUser.email,
+              username : authUser.displayName,
+              emailVerified : authUser.emailVerified,
+              canLogOn : authUser.emailVerified
+            }            
             this.setState({ authUser:user });
           }else{
             this.setState({ authUser: null });
@@ -32,7 +38,8 @@ const withAuthentication = Component => {
       this.listener();
     }
 
-    render() {
+    render() { c_log("render AuthUserContext with authUser:");
+    c_log(this.state.authUser);
       return (
         <AuthUserContext.Provider value={this.state.authUser}>
           <Component {...this.props} />

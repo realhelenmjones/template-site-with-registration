@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { compose } from 'recompose';
-import { Form, Button } from 'bootstrap-4-react';
-
+import { Form, Button,Alert } from 'bootstrap-4-react';
+import SpinnerOverlay from '../../util/SpinnerOverlay'
 
 import ErrorMessage from '../ErrorMessage';
 import userService from '../../services/UserService'
 import * as ROUTES from '../../constants';
+import {c_log} from '../../util/logger'
 
 const LoginPage = () => (
   <div>
@@ -21,6 +22,7 @@ const INITIAL_STATE = {
   email: 'bluewaterblue@hotmail.com',
   password: 'aaaaaaaa1q',
   error: null,
+  loading : false
 };
 
 class LoginFormBase extends Component {
@@ -33,6 +35,7 @@ class LoginFormBase extends Component {
   onSubmit = event => {
 
     event.preventDefault();    
+    this.setState({ loading:true, error:null });
 
     if (this.isInvalid())
       return;
@@ -41,11 +44,12 @@ class LoginFormBase extends Component {
 
     userService
       .loginWithEmailAndPassword(email, password)
-      .then(() => {console.log("jhjhjhjhjhjh");
+      .then(() => {
+        this.setState({ ...INITIAL_STATE });
         this.props.history.push(ROUTES.ACCOUNT);
       })
       .catch(error => {
-        this.setState({ error });
+        this.setState({ error, loading:false });
       });
 
       
@@ -61,8 +65,9 @@ class LoginFormBase extends Component {
   };
 
   render() {
-    const { email, password, error } = this.state;
+    const { email, password, error, loading } = this.state;
     return (
+      <SpinnerOverlay loading={loading}>
       <Form onSubmit={this.onSubmit}>
         <Form.Group>
           <label htmlFor="email">Email address</label>
@@ -81,8 +86,9 @@ class LoginFormBase extends Component {
         </Form.Group>
 
         <Button primary type="submit" disabled={this.isInvalid()}> Login</Button>
-        {error && <p><ErrorMessage error={error} /></p>}
+        {error && <Alert danger style={{marginTop:'10px'}}><ErrorMessage error={error} /></Alert>}
       </Form>
+      </SpinnerOverlay>
     );
   }
 }

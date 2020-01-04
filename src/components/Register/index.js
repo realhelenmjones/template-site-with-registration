@@ -9,12 +9,16 @@ import { TextArea, TextInput, RadioGroup, Select, Checkbox, CheckboxSingle } fro
 
 import userService from '../../services/UserService'
 import ErrorMessage from '../ErrorMessage'
-import {AlertModal} from '../Modals'
+import { AlertModal } from '../Modals'
 import * as ROUTES from '../../constants';
 
 import SpinnerOverlay from '../../util/SpinnerOverlay'
+import {c_log} from '../../util/logger'
 
 import RegisterSuccessPage from './register-success'
+import ConfirmEmailAddress from './please-confirm-email'
+import EmailConfirmedPage from './email-confirmed'
+
 
 
 const RegisterPage = () => (
@@ -33,6 +37,7 @@ const INITIAL_FORM_VALUES = {
     age: '',
     sports: [],
     gender: '',
+    username: '',
     acceptedTerms: ''
 };
 
@@ -68,13 +73,13 @@ const VALIDATION_SCHEMA = {
     username: Yup.string()
         .required('Required'),
     about: Yup.string(),
-        // .required('Required'),
+    // .required('Required'),
     gender: Yup.string(),
-        // .required('Required'),
+    // .required('Required'),
     age: Yup.string(),
-        // .required("Required"),
+    // .required("Required"),
     sports: Yup.string(),
-        // .required('Required'),
+    // .required('Required'),
     acceptedTerms: Yup.string()
         .required('You must accept the terms and conditions')
 }
@@ -85,139 +90,122 @@ const INITIAL_STATE = {
 };
 
 class RegisterFormBase extends React.Component {
-    
+
     constructor(props) {
         super(props);
         this.state = {};
     }
 
-    componentDidUpdate(){
-        if (this.state.error){
-          //  Bootstrap.modal('#registerError', {});
-          window.scrollTo(0,0);
+    componentDidUpdate() {
+        if (this.state.error) {
+            //  Bootstrap.modal('#registerError', {});
+            window.scrollTo(0, 0);
         }
     }
 
     render() {
         const { error, loading } = this.state;
         return (
-          <SpinnerOverlay loading={loading}>
-      <div style={{padding:'10px'}}>
-            <Formik
-                initialValues={INITIAL_FORM_VALUES}
-                validationSchema={Yup.object().shape(VALIDATION_SCHEMA)}
-                onSubmit={(values, { setSubmitting, setFieldTouched }) => {
-                    const { email, passwordOne, name, about, username } = values;
-                    console.log("SUBMIT:" + JSON.stringify(values));
-                    
-                    this.setState({ loading:true, error:null });
+            <SpinnerOverlay loading={loading}>
+                <div style={{ padding: '10px' }}>
+                    <Formik
+                        initialValues={INITIAL_FORM_VALUES}
+                        validationSchema={Yup.object().shape(VALIDATION_SCHEMA)}
+                        onSubmit={(values, { setSubmitting, setFieldTouched }) => {
+                            const { email, passwordOne, name, about, username } = values;
+                            c_log("SUBMIT:" + JSON.stringify(values));
 
-                    setTimeout(() => {
+                            this.setState({ loading: true, error: null });
+                            
+                            setTimeout(() => {
 
-                        setSubmitting(false);
+                                setSubmitting(false);
 
-                        userService
-                            .registerWithEmailAndPassword(email, passwordOne)
+                                userService
+                                    .registerWithEmailAndPassword(email, passwordOne)
 
-                            .then(authUser => {
-                                //TODO -- this will change each app
-                                // userService.createMigratableUser(
-                                //     authUser.user.uid,
-                                //     email,
-                                //     encodePassword()
-                                // );
-console.log('create my user');
-                               
-                               return userService.createUser(
-                                    authUser.user.uid,
-                                    email,
-                                    username
-                                );
-                                
-                                //eveything else on top of user
-                                // userService.createProfile(
-                                //     authUser.user.uid,
-                                //     email,
-                                //     username
-                                // );
-                                //
-                                // OR
-                                // cvnService.createCvn(location)
+                                    .then(authUser => {
+                                        c_log("oooeer"); c_log(authUser)
 
-                            })
-                            .then(() => {
-                                return userService.doSendEmailVerification();
-                              })
-                            .then(() => {
-                                this.setState({ ...INITIAL_STATE });
-                                this.props.history.push(ROUTES.REGISTER_SUCCESS);
-                                
-                            })
+                                        return userService.createAuthUser(
+                                            authUser.user.uid,
+                                            email,
+                                            username
+                                        );
 
-                            .catch(error => {
-                                //TODO error message about invalid data needs to be displayed on the form. Can it be displayed against the 
-                                //form fields that are invalid e.e. password is not valid.
-                                console.log("Error"); console.log(error);
-                                this.setState({ error, loading:false });
-                                
-                            });
+
+                                    })
+                                    .then(() => {
+                                        return userService.doSendEmailVerification();
+                                    })
+                                    .then(() => {
+                                        this.setState({ ...INITIAL_STATE });
+                                        this.props.history.push(ROUTES.REGISTER_SUCCESS);
+
+                                    })
+
+                                    .catch(error => {
+                                        c_log("Error"); c_log(error);
+                                        this.setState({ error, loading: false });
+
+                                    });
 
 
 
-                    }, 3000);
-                }}
-            >
-                {() => {
-                    
-                    return (
-                        <>
-                            {error ? <Alert danger><ErrorMessage error={error} /></Alert> : null}
-                            {loading ? <Alert primary>LOADING .....</Alert> : null} 
+                            }, 3000);
+                        }}
+                    >
+                        {() => {
 
-                            <Form>
-                                <fieldset className="form-group">
-                                    <legend>User Details</legend>
-                                    <TextInput type="email" name="email" label="Email" />
+                            return (
+                                <>
+                                    {error ? <Alert danger><ErrorMessage error={error} /></Alert> : null}
+                                    {loading ? <Alert primary>LOADING .....</Alert> : null}
 
-                                    <TextInput type="password" name="passwordOne" label="Password" />
+                                    <Form>
+                                        <fieldset className="form-group">
+                                            <legend>User Details</legend>
+                                            <TextInput type="email" name="email" label="Email" />
 
-                                    <TextInput type="password" name="passwordTwo" label="Confirm Password" />
+                                            <TextInput type="password" name="passwordOne" label="Password" />
 
-                                    <TextInput type="text" name="username" label="Username/Handle" />
+                                            <TextInput type="password" name="passwordTwo" label="Confirm Password" />
 
-                                </fieldset>
+                                            <TextInput type="text" name="username" label="Username/Display Name" />
 
-                                <fieldset>
-                                    <legend>Additional Details</legend>
+                                        </fieldset>
 
-                                    <TextInput type="text" name="name" label="Name" />
+                                        <fieldset>
+                                            <legend>Additional Details</legend>
 
-                                    <RadioGroup label="Gender*" name="gender" options={genderOptions} />
+                                            <TextInput type="text" name="name" label="Name" />
 
-                                    <Select label="Age" name="age" options={ageOptions} />
+                                            <RadioGroup label="Gender*" name="gender" options={genderOptions} />
 
-                                    <Checkbox label="Sports*" name="sports" options={sportOptions} />
+                                            <Select label="Age" name="age" options={ageOptions} />
 
-                                    <TextArea name="about" label="A few words about you" lg />
+                                            <Checkbox label="Sports*" name="sports" options={sportOptions} />
+
+                                            <TextArea name="about" label="A few words about you" lg />
 
 
-                                    <CheckboxSingle name="acceptedTerms" value="agree">
-                                        I accept the <a target="_blank" href="/tandc.html">terms and conditions*</a>
-                                    </CheckboxSingle>
+                                            <CheckboxSingle name="acceptedTerms" value="agree">
+                                                I accept the <a target="_blank" href="/tandc.html">terms and conditions*</a>
+                                            </CheckboxSingle>
 
-                                </fieldset>
+                                        </fieldset>
 
-                                <Button primary type="submit" disabled={loading}>Register</Button>
+                                        <Button primary type="submit" disabled={loading}>Register</Button>
 
-                            </Form>
-                        </>
-                    );
-                }}
-            </Formik>
-            {error?
-            <AlertModal id="registerError" title=""><Alert danger><ErrorMessage error={error} /></Alert></AlertModal>
-            : null}
-            </div>
+                                    </Form>
+                                </>
+                            );
+                        }}
+                    </Formik>
+                    {error ?
+                        <AlertModal id="registerError" title=""><Alert danger><ErrorMessage error={error} /></Alert></AlertModal>
+                        : null}
+                </div>
             </SpinnerOverlay>
         )
     }
@@ -231,4 +219,4 @@ const RegisterForm = compose(
 
 export default RegisterPage;
 
-export { RegisterSuccessPage };
+export { RegisterSuccessPage, ConfirmEmailAddress, EmailConfirmedPage };

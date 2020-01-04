@@ -13,7 +13,7 @@ import HomePage from '../Home'
 import AccountPage from '../Account';
 import LoginPage from '../Login'
 import LogoutPage from '../Logout'
-import RegisterPage,{RegisterSuccessPage} from '../Register'
+import RegisterPage,{RegisterSuccessPage, EmailConfirmedPage} from '../Register'
 
 
 
@@ -39,6 +39,7 @@ const Main = () => (
         <PrivateRoute path={ROUTES.ACCOUNT} component={AccountPage} />      
         {/* {TODO PrivateRoute} */}
         <Route path={ROUTES.REGISTER_SUCCESS} component={RegisterSuccessPage} />      
+        <Route path={ROUTES.EMAIL_CONFIRMED} component={EmailConfirmedPage} />      
   </Container>
 
 )
@@ -48,16 +49,18 @@ const Header = () => (
      {authUser =>
   <React.Fragment>
   
-     {/* TODO styled component */}
+     {/* TODO username on right and link it to account page */}
     <div className='titleBar'><Link to={ROUTES.HOME}>Software Developer Alliance .org.uk</Link></div>
    <Navbar expand="lg" light bg="light" mb="3">
-      <Navbar.Brand href="#"></Navbar.Brand>
+      <Navbar.Brand href="#">{authUser && authUser.canLogOn?authUser.username:''}</Navbar.Brand>
         <Navbar.Toggler target="#navbarColor1" />
         <Collapse navbar id="navbarColor1">            
           <Navbar.Nav mr="auto">
-            {  authUser? <NavigationAuth authUser={authUser}/>: <NavigationNonAuth />}          
-          </Navbar.Nav>           
-          <Navbar.Text><Link to={ROUTES.ACCOUNT}>{  authUser?authUser.username:'' }</Link></Navbar.Text> 
+            {  authUser && authUser.canLogOn? <NavigationAuth authUser={authUser}/>: <NavigationNonAuth />}          
+          </Navbar.Nav>   
+          {authUser && authUser.canLogOn ?        
+          <Navbar.Text><Link to={ROUTES.ACCOUNT}>{  authUser.username?authUser.username:'' }</Link></Navbar.Text> 
+          :null}
         </Collapse>
       </Navbar>    
       
@@ -68,10 +71,13 @@ const Header = () => (
 
 
 const NavigationAuth = ({authUser}) => (
+  authUser.canLogOn?
   <>  
   <LinkContainer to={ROUTES.LOGOUT}><Nav.ItemLink>Logout</Nav.ItemLink></LinkContainer>
   <LinkContainer to={ROUTES.ACCOUNT}><Nav.ItemLink>My Profile</Nav.ItemLink></LinkContainer>  
   </>
+  :
+  null
 );
 
 const NavigationNonAuth = () => (

@@ -3,27 +3,30 @@ import React from 'react';
 
 const ErrorMessage = ({ error }) => {
     if (error.code === 'auth/weak-password') {
-        return 'Password is too weak';
+        return 'Password is too weak.';
     }
     else if (error.code === 'auth/invalid-email') {
-        return 'Email is invalid';
+        return 'Email is invalid.';
     }
     else if (error.code === 'auth/email-already-in-use') {
-        return 'The email address is already registered';
+        return 'The email address is already registered.';
     }
     else if (error.code === 'auth/user-disabled') {
-        return 'Account has been disabled';
+        return 'Account has been disabled.';
     }
     else if (error.code === 'auth/user-not-found') {
-        return 'Login details are incorrect';
+        return 'Login details are incorrect.';
     }
     else if (error.code === 'auth/wrong-password') {
-        return 'Login details are incorrect';
+        return 'Login details are incorrect.';
     }
-    else if (error.code.indexOf('network')>-1) {
-        return 'A network error has occurred';
+    else if (error.code && error.code.indexOf('network')>-1) {
+        return 'A network error has occurred.';
     }    
-    else {
+    else if (!error.code){
+        return "An unexpected error occurred.";
+    }
+    else{
         return error.message;
     }
 }

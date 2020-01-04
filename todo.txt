@@ -1,0 +1,20 @@
+username to right in navbar
+username link to account page
+
+firebase keeps logged on forever,
+    1 session time out? 
+    2 keep mini profile detaiLs to display but require login again if try to access 
+protected pages and session has timedout. 
+        Q/how to know if session timed out
+
+
+How log errors?
+
+
+getting errors from firebase in console e.g
+when no network, initial firebase setup complaining uncaught from auth.esm.js
+
+
+
+
+
