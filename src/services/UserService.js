@@ -53,6 +53,8 @@ const createAuthUser = (uid, email, displayName) => {
     });
 }
 
+const doPasswordReset = email => auth.sendPasswordResetEmail(email);
+
 // this would generate a key: 
 //return db.collection("users").add(
 //   {
@@ -96,7 +98,8 @@ const userService = {
   logout,
   createAuthUser,
   findUser,
-  findUsers
+  findUsers,
+  doPasswordReset
   // createAuthProfile
 }
 

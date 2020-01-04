@@ -11,7 +11,8 @@ class ConfirmEmailAddress extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      emailSent: false
+      emailSent: false,
+      error: null
     }
     this.sendEmailAgain = this.sendEmailAgain.bind(this);
   }
@@ -42,7 +43,7 @@ class ConfirmEmailAddress extends React.Component {
       <>
         <Container>
           <div>
-            <h3>Activate your account</h3>
+            <h1>Activate your account</h1>
 
             {email ?
               <p>Email address you registered with is <b>{email}</b></p>

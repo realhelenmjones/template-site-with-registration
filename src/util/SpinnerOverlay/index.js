@@ -9,7 +9,8 @@ const SpinnerOverlay = ({ loading, text, children }) =>
         styles={{
             overlay: (base) => ({
                 ...base,
-                background: 'rgba(125, 125, 125, 0.5)'
+                background: 'rgba(225, 225, 225, 0.5)'
+                // background: 'rgba(125, 125, 125, 0.5)'
             })
         }}
     >

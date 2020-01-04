@@ -18,6 +18,7 @@ import {c_log} from '../../util/logger'
 import RegisterSuccessPage from './register-success'
 import ConfirmEmailAddress from './please-confirm-email'
 import EmailConfirmedPage from './email-confirmed'
+import ResetPasswordPage from './forgot-password'
 
 
 
@@ -219,4 +220,4 @@ const RegisterForm = compose(
 
 export default RegisterPage;
 
-export { RegisterSuccessPage, ConfirmEmailAddress, EmailConfirmedPage };
+export { RegisterSuccessPage, ConfirmEmailAddress, EmailConfirmedPage, ResetPasswordPage };

@@ -13,7 +13,7 @@ import HomePage from '../Home'
 import AccountPage from '../Account';
 import LoginPage from '../Login'
 import LogoutPage from '../Logout'
-import RegisterPage,{RegisterSuccessPage, EmailConfirmedPage} from '../Register'
+import RegisterPage,{RegisterSuccessPage, EmailConfirmedPage, ResetPasswordPage} from '../Register'
 
 
 
@@ -39,7 +39,8 @@ const Main = () => (
         <PrivateRoute path={ROUTES.ACCOUNT} component={AccountPage} />      
         {/* {TODO PrivateRoute} */}
         <Route path={ROUTES.REGISTER_SUCCESS} component={RegisterSuccessPage} />      
-        <Route path={ROUTES.EMAIL_CONFIRMED} component={EmailConfirmedPage} />      
+        <Route path={ROUTES.EMAIL_CONFIRMED} component={EmailConfirmedPage} />  
+        <Route path={ROUTES.RESET_PASSWORD} component={ResetPasswordPage} />      
   </Container>
 
 )
@@ -49,18 +50,17 @@ const Header = () => (
      {authUser =>
   <React.Fragment>
   
-     {/* TODO username on right and link it to account page */}
-    <div className='titleBar'><Link to={ROUTES.HOME}>Software Developer Alliance .org.uk</Link></div>
-   <Navbar expand="lg" light bg="light" mb="3">
-      <Navbar.Brand href="#">{authUser && authUser.canLogOn?authUser.username:''}</Navbar.Brand>
+     {/* TODO avatar for username account login */}
+    <div className='titleBar'><Link to={ROUTES.HOME}>Software Developer Alliance .org.uk</Link></div>    
+   <Navbar expand="lg" light bg="light" mb="3">      
         <Navbar.Toggler target="#navbarColor1" />
         <Collapse navbar id="navbarColor1">            
           <Navbar.Nav mr="auto">
             {  authUser && authUser.canLogOn? <NavigationAuth authUser={authUser}/>: <NavigationNonAuth />}          
           </Navbar.Nav>   
           {authUser && authUser.canLogOn ?        
-          <Navbar.Text><Link to={ROUTES.ACCOUNT}>{  authUser.username?authUser.username:'' }</Link></Navbar.Text> 
-          :null}
+          <Navbar.Text><Link to={ROUTES.ACCOUNT}><i className="fas fa-user-circle" />{ authUser.username?authUser.username:'' }</Link></Navbar.Text> 
+          :null} 
         </Collapse>
       </Navbar>    
       

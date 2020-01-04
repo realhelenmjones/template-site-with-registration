@@ -5,7 +5,7 @@ import { Container } from 'bootstrap-4-react';
 const EmailConfirmedPage= ()=>(
   <>
     <Container>
-        <h3>You are now registered</h3>
+        <h1>You are now registered</h1>
 
         
         

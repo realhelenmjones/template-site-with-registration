@@ -13,7 +13,10 @@ const LoginPage = () => (
   <div>
     <LoginForm />
     <p>
-        Don't have an account? <Link to={ROUTES.REGISTER}>Register</Link>
+        <Link to={ROUTES.REGISTER}>Register</Link> |  
+        &nbsp;<Link to={ROUTES.RESET_PASSWORD}>Forgot Password</Link>
+    
+        
     </p>
   </div>
 );
@@ -67,6 +70,7 @@ class LoginFormBase extends Component {
   render() {
     const { email, password, error, loading } = this.state;
     return (
+      <>
       <SpinnerOverlay loading={loading}>
       <Form onSubmit={this.onSubmit}>
         <Form.Group>
@@ -89,6 +93,7 @@ class LoginFormBase extends Component {
         {error && <Alert danger style={{marginTop:'10px'}}><ErrorMessage error={error} /></Alert>}
       </Form>
       </SpinnerOverlay>
+      </>
     );
   }
 }

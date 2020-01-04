@@ -1,5 +1,5 @@
-username to right in navbar
-username link to account page
+*DONE username to right in navbar
+*DONE username link to account page
 
 firebase keeps logged on forever,
     1 session time out? 
@@ -14,7 +14,7 @@ How log errors?
 getting errors from firebase in console e.g
 when no network, initial firebase setup complaining uncaught from auth.esm.js
 
-
+local font awesome icons? only use a few.
 
 
 
