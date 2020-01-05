@@ -49,6 +49,7 @@ class LoginFormBase extends Component {
       .loginWithEmailAndPassword(email, password)
       .then(() => {
         this.setState({ ...INITIAL_STATE });
+        //TODO need login type from url and redirect accordingly (if 2 types)
         this.props.history.push(ROUTES.ACCOUNT);
       })
       .catch(error => {

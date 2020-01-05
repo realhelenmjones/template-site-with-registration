@@ -20,11 +20,22 @@ const withAuthentication = Component => {
         authUser => {
         c_log("with_auth detected onAuthStateChanged"); c_log(authUser);
           if (authUser){
+            let displayName = authUser.displayName;
+            let type="A";
+
+            let i = authUser.displayName?authUser.displayName.indexOf("_QZ_"):-1;
+            if (i>-1){
+              displayName = authUser.displayName.substring(0,i);
+              type = authUser.displayName.substring(authUser.displayName.length-1,authUser.displayName.length);
+            }
+
+           
             const user = {
               email : authUser.email,
-              username : authUser.displayName,
+              displayName,
               emailVerified : authUser.emailVerified,
-              canLogOn : authUser.emailVerified
+              canLogOn : authUser.emailVerified,
+              type
             }            
             this.setState({ authUser:user });
           }else{

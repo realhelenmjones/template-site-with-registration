@@ -8,6 +8,8 @@ protected pages and session has timedout.
         Q/how to know if session timed out
 
 
+query param (currently on logonpage)
+
 *DONE How log errors?
 
 
@@ -15,6 +17,17 @@ getting errors from firebase in console e.g
 when no network, initial firebase setup complaining uncaught from auth.esm.js
 
 *DONE local font awesome icons? only use a few.
+
+
+Uses Sentry for error logging. ErrorBoundary.
+
+TODO: 
+Hooks
+There is duplication in the two types of registration so use Hoc or render prop etc
+Pull out reusable: 
+    login box component
+    Registration process (firebase) component
+
 
 
 

@@ -12,9 +12,10 @@ import ErrorBoundary  from '../../util/ErrorBoundary'
 
 import HomePage from '../Home'
 import AccountPage from '../Account';
+import AccountPageB from '../AccountB';
 import LoginPage from '../Login'
 import LogoutPage from '../Logout'
-import RegisterPage,{RegisterSuccessPage, EmailConfirmedPage, ResetPasswordPage} from '../Register'
+import RegisterForm,{RegisterFormB,RegisterSuccessPage, EmailConfirmedPage, ResetPasswordPage} from '../Register'
 
 
 
@@ -32,12 +33,14 @@ const App = () => (
 const Main = () => (
   <ErrorBoundary>
 <Container>
-        <Route path={ROUTES.REGISTER} component={RegisterPage} />
+        <Route exact path={ROUTES.REGISTER} component={RegisterForm} />
+        <Route path={ROUTES.REGISTER_B} component={RegisterFormB}/>
         <Route path={ROUTES.LOGIN} component={LoginPage} />
         <Route path={ROUTES.LOGOUT} component={LogoutPage} />
         <Route exact path={ROUTES.HOME} component={HomePage} />
-        <PrivateRoute path={ROUTES.ACCOUNT} component={AccountPage} />      
-        {/* {TODO PrivateRoute} */}
+        <PrivateRoute exact path={ROUTES.ACCOUNT} component={AccountPage}/>      
+        <PrivateRoute path={ROUTES.ACCOUNT_B} component={AccountPageB} regType="B"/>      
+        
         <Route path={ROUTES.REGISTER_SUCCESS} component={RegisterSuccessPage} />      
         <Route path={ROUTES.EMAIL_CONFIRMED} component={EmailConfirmedPage} />  
         <Route path={ROUTES.RESET_PASSWORD} component={ResetPasswordPage} />      
@@ -52,7 +55,7 @@ const Header = () => (
      {authUser =>
   <React.Fragment>
   
-     {/* TODO avatar for username account login */}
+     
     <div className='titleBar'><Link to={ROUTES.HOME}>Software Developer Alliance .org.uk</Link></div>    
    
    <Navbar expand="lg" light bg="light" mb="3">      
@@ -62,7 +65,7 @@ const Header = () => (
             {  authUser && authUser.canLogOn? <NavigationAuth authUser={authUser}/>: <NavigationNonAuth />}          
           </Navbar.Nav>   
           {authUser && authUser.canLogOn ?        
-          <Navbar.Text><Link to={ROUTES.ACCOUNT} style={{textDecoration:'none'}}><img src="./images/avatar.png" style={{height:'18px'}}/> { authUser.username?authUser.username:'' }</Link></Navbar.Text> 
+          <Navbar.Text><Link to={ROUTES.ACCOUNT} style={{textDecoration:'none'}}><img src="./images/avatar.png" style={{height:'18px'}}/> { authUser.displayName?authUser.displayName:'' }</Link></Navbar.Text> 
           :null} 
         </Collapse>
       </Navbar>    
@@ -86,8 +89,10 @@ const NavigationAuth = ({authUser}) => (
 
 const NavigationNonAuth = () => (
   <>
-  <LinkContainer to={ROUTES.REGISTER}><Nav.ItemLink>Register</Nav.ItemLink></LinkContainer>
-  <LinkContainer to={ROUTES.LOGIN}><Nav.ItemLink>Login</Nav.ItemLink></LinkContainer>  
+  <LinkContainer to={ROUTES.REGISTER}><Nav.ItemLink>Register type A</Nav.ItemLink></LinkContainer>
+  <LinkContainer to={ROUTES.REGISTER_B}><Nav.ItemLink>Register type B</Nav.ItemLink></LinkContainer>
+  <LinkContainer to={ROUTES.LOGIN+"?type=A"}><Nav.ItemLink>Login type A</Nav.ItemLink></LinkContainer>  
+  <LinkContainer to={ROUTES.LOGIN+"?type=B"}><Nav.ItemLink>Login type B</Nav.ItemLink></LinkContainer>  
   <Nav.Item dropdown>
               <Nav.Link dropdownToggle>My Account</Nav.Link>
               <Dropdown.Menu>
