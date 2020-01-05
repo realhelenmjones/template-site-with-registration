@@ -137,7 +137,7 @@ class RegisterFormBase extends React.Component {
 
                                     })
                                     .then(() => {
-                                        return userService.doSendEmailVerification();
+                                        return userService.sendEmailVerification();
                                     })
                                     .then(() => {
                                         this.setState({ ...INITIAL_STATE });

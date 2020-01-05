@@ -43,16 +43,17 @@ class ConfirmEmailAddress extends React.Component {
       <>
         <Container>
           <div>
-            <h1>Activate your account</h1>
+            <h1>Please activate your account</h1>
 
-            {email ?
-              <p>Email address you registered with is <b>{email}</b></p>
-              : null}
+           
 
             <p> We have sent you a link to activate your account. Please check your email (including your spam folder). </p>
 
             <p>If the email isn't there (it may take a few minutes) <a href="#" onClick={this.sendEmailAgain}>send another email</a> </p>
 
+            {email ?
+              <p>The email address you registered with is <b>{email}</b></p>
+              : null}
             {emailSent ?
               <Alert success>Email sent again. Note: it may take a few minutes to arrive.</Alert>
               : null}

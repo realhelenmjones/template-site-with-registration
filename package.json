@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@sentry/browser": "^5.10.2",
     "bootstrap-4-react": "0.0.59",
     "firebase": "^7.5.0",
     "formik": "^2.0.6",

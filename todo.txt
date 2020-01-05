@@ -8,13 +8,13 @@ protected pages and session has timedout.
         Q/how to know if session timed out
 
 
-How log errors?
+*DONE How log errors?
 
 
 getting errors from firebase in console e.g
 when no network, initial firebase setup complaining uncaught from auth.esm.js
 
-local font awesome icons? only use a few.
+*DONE local font awesome icons? only use a few.
 
 
 

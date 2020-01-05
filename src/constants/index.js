@@ -1,4 +1,3 @@
-export const DEPLOYED = false;
 
 
 export const REGISTER = '/register';

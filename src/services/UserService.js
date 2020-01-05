@@ -32,11 +32,12 @@ const createAuthUser = (uid, email, displayName) => {
     // photoURL
   })
     .then(() => {
-
+let now = new Date();
       return db.collection("users").doc(uid).set(
         {
           email,
-          displayName
+          displayName,
+          time:now
         }
       );
 
@@ -77,7 +78,8 @@ const findUser = uid => db.collection("users").doc(uid);
 const findUsers = () => {
   db.collection("users").get().then(function (querySnapshot) {
     querySnapshot.forEach(function (doc) {
-      c_log(doc.id, " => ", doc.data());
+      c_log(doc.id+" => "+JSON.stringify(doc.data()));
+      //TktNBfZUzaWwv8htMeGHl9wufh13 => {"displayName":"helen jones","email":"thehelenjones@yahoo.com"}
     });
     return Promise.resolve();
   })
