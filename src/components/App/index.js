@@ -1,7 +1,7 @@
 
 import React  from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import { Collapse, Navbar, Nav, Container, Dropdown } from 'bootstrap-4-react';
+import { Collapse, Navbar, Nav, Container, Dropdown, Row, Col } from 'bootstrap-4-react';
 import {LinkContainer} from 'react-router-bootstrap'
 
 import * as ROUTES from '../../constants';
@@ -56,7 +56,7 @@ const Header = () => (
   <React.Fragment>
   
      
-    <div className='titleBar'><Link to={ROUTES.HOME}>Software Developer Alliance .org.uk</Link></div>    
+    <div className='titleBar'><Link to={ROUTES.HOME}>Million Pound Website</Link></div>    
    
    <Navbar expand="lg" light bg="light" mb="3">      
         <Navbar.Toggler target="#navbarColor1" />
@@ -68,7 +68,8 @@ const Header = () => (
           <Navbar.Text><Link to={ROUTES.ACCOUNT} style={{textDecoration:'none'}}><img src="./images/avatar.png" style={{height:'18px'}}/> { authUser.displayName?authUser.displayName:'' }</Link></Navbar.Text> 
           :null} 
         </Collapse>
-      </Navbar>    
+      </Navbar>  
+     
       
 </React.Fragment>
 }

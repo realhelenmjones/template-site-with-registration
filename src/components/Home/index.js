@@ -13,6 +13,7 @@ const HomePage = () => (
           <Col col="sm">
           <Card text="center">
         <Card.Header ><b>Who is this for?</b></Card.Header>
+        <Card.Image src="/images/pilica-poland-may-1-2019-250nw-1388572649.jpg" top/>
         <Card.Body>
           <Card.Text>
           Experienced developers who are currently out of work.
@@ -23,6 +24,7 @@ const HomePage = () => (
 <Col col="sm">
           <Card text="center">
         <Card.Header ><b>Why?</b></Card.Header>
+        <Card.Image src="/images/farmer-organic-tomato-crop-on-250nw-340650272.jpg" top/>
         <Card.Body>
           <Card.Text>
           There are experienced software developers who have been forced to work or are contemplating working minimum wage jobs whilst they continue looking for their next professional opportunity. 
@@ -33,6 +35,7 @@ const HomePage = () => (
 <Col col="sm">
           <Card text="center">
         <Card.Header ><b>So what?</b></Card.Header>
+        <Card.Image src="/images/window-view-lonely-tree-camper-250nw-1388572655.jpg" top/>
         <Card.Body>
           <Card.Text>
           Experienced software developers should not be working unskilled minimum wage jobs. Experienced software developers should be doing valuable development work even if they still only make minimum wage equivalent.

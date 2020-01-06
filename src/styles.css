@@ -9,11 +9,13 @@
 
 .titleBar{
 /* background-color:#ec7a08; */
-background-color:#393f44;
+/* background-color:#393f44; */
+background-color:#054b05;
 margin-bottom:0px;
 padding:10px;
 color:#eee;
-font-size:20px
+font-size:20px;
+font-family:"Comic Sans MS", cursive, sans-serif;
 }
 
 .titleBar a {
