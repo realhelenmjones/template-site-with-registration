@@ -10,7 +10,6 @@ class LogoutPageBase extends Component {
     
     componentWillMount() {
         userService.logout(); 
-        //todo               
     }
 
     render() {

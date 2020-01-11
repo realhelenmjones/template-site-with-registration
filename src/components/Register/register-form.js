@@ -96,7 +96,7 @@ class RegisterFormBase extends React.Component {
                                     })
 
                                     .catch(error => {
-                                        c_log("Error"); c_log(error);
+                                        c_log("Reg Error"); c_log(error);
                                         this.setState({ error, loading: false });
 
                                     });
