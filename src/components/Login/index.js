@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import { Form, Button,Alert } from 'bootstrap-4-react';
+import queryString from 'query-string'; 
+
 import SpinnerOverlay from '../../util/SpinnerOverlay'
 
 import ErrorMessage from '../ErrorMessage';
@@ -35,6 +37,7 @@ class LoginFormBase extends Component {
     this.state = { ...INITIAL_STATE };
   }
 
+  
   onSubmit = event => {
 
     event.preventDefault();    
@@ -47,10 +50,19 @@ class LoginFormBase extends Component {
 
     userService
       .loginWithEmailAndPassword(email, password)
-      .then(() => {
+      .then((user) => {
         this.setState({ ...INITIAL_STATE });
         //TODO need login type from url and redirect accordingly (if 2 types)
-        this.props.history.push(ROUTES.ACCOUNT);
+        if (!user.emailVerified)
+          this.props.history.push(user.type=="B"?ROUTES.PLEASE_CONFIRM_EMAIL_B:ROUTES.PLEASE_CONFIRM_EMAIL);
+        else {
+          const params = queryString.parse(this.props.location.search);
+          c_log("fwd:"+params.fwd);
+          if (params.fwd)
+            this.props.history.push(params.fwd);
+          else
+            this.props.history.push(user.type=="B"?ROUTES.ACCOUNT_B : ROUTES.ACCOUNT);
+        }
       })
       .catch(error => {
         this.setState({ error, loading:false });

@@ -1,24 +1,12 @@
 import React from 'react';
-import { compose } from 'recompose';
-import { withRouter } from 'react-router-dom';
-import Bootstrap, { Button, Alert } from 'bootstrap-4-react';
-import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 
 import { TextArea, TextInput, RadioGroup, Select, Checkbox, CheckboxSingle } from '../../util/formik-bootstrap-controls'
 
-import userService from '../../services/UserService'
-import ErrorMessage from '../ErrorMessage'
-import { AlertModal } from '../Modals'
 import * as ROUTES from '../../constants';
+import RegisterForm from './register-form'
 
-import SpinnerOverlay from '../../util/SpinnerOverlay'
-import {c_log} from '../../util/logger'
-
-const INITIAL_FORM_VALUES = {
-    email: '',
-    passwordOne: 'aaaaaaaa1q',
-    passwordTwo: 'aaaaaaaa1q',
+const INITIAL_FORM_VALUES = {  
     about: '',
     name: '',
     age: '',
@@ -27,9 +15,6 @@ const INITIAL_FORM_VALUES = {
     displayName: '',
     acceptedTerms: ''
 };
-
-
-
 
 const genderOptions = [
     { text: 'Male', value: 'm' },
@@ -50,14 +35,7 @@ const sportOptions = [
 ];
 
 const VALIDATION_SCHEMA = {
-    email: Yup.string().email()
-        .required('Required'),
-    passwordOne: Yup.string()
-        .required('Required'),
-    passwordTwo: Yup.string()
-        .required('Required')
-        .oneOf([Yup.ref('passwordOne'), null], 'Passwords must match'),
-        displayName: Yup.string()
+    displayName: Yup.string()
         .required('Required'),
     about: Yup.string(),
     // .required('Required'),
@@ -71,138 +49,51 @@ const VALIDATION_SCHEMA = {
         .required('You must accept the terms and conditions')
 }
 
-const INITIAL_STATE = {
-    error: null,
-    loading: false
-};
+const RegisterFormA = () =>
+    <RegisterForm
+    initialFormValues={INITIAL_FORM_VALUES}
+        validationScheme={VALIDATION_SCHEMA}
+        regType="A"
+        pleaseConfirmEmailUrl={ROUTES.PLEASE_CONFIRM_EMAIL}
+        confirmedEmailSuccessUrl={ROUTES.EMAIL_CONFIRMED_SUCCESS}
+        >
+        {() => (
+            <>
+                <fieldset className="form-group">
+                    <legend>User Details</legend>
+                    <TextInput type="email" name="email" label="Email" />
 
-class RegisterFormBase extends React.Component {
+                    <TextInput type="password" name="passwordOne" label="Password" />
 
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
+                    <TextInput type="password" name="passwordTwo" label="Confirm Password" />
 
-    componentDidUpdate() {
-        if (this.state.error) {
-            //  Bootstrap.modal('#registerError', {});
-            window.scrollTo(0, 0);
-        }
-    }
+                    <TextInput type="text" name="displayName" label="Display Name" />
 
-    render() {
-        const { error, loading } = this.state;
-        return (
-            
-                <div style={{ padding: '10px' }}>
-                    <Formik
-                        initialValues={INITIAL_FORM_VALUES}
-                        validationSchema={Yup.object().shape(VALIDATION_SCHEMA)}
-                        onSubmit={(values, { setSubmitting, setFieldTouched }) => {
-                            const { email, passwordOne, name, about, displayName } = values;
-                            c_log("SUBMIT:" + JSON.stringify(values));
+                </fieldset>
 
-                            this.setState({ loading: true, error: null });
-                            
-                            setTimeout(() => {
+                <fieldset>
+                    <legend>Additional Details</legend>
 
-                                setSubmitting(false);
+                    <TextInput type="text" name="name" label="Name" />
 
-                                userService
-                                    .registerWithEmailAndPassword(email, passwordOne)
-                                    .then(authUser => {
-                                        c_log("oooeer"); c_log(authUser)
+                    <RadioGroup label="Gender*" name="gender" options={genderOptions} />
 
-                                        return userService.createAuthProfile(
-                                            authUser.user.uid,
-                                            email,
-                                            displayName
-                                            //"A"
-                                        );
+                    <Select label="Age" name="age" options={ageOptions} />
+
+                    <Checkbox label="Sports*" name="sports" options={sportOptions} />
+
+                    <TextArea name="about" label="A few words about you" lg />
 
 
-                                    })
-                                    .then(() => {
-                                        return userService.sendEmailVerification();
-                                    })
-                                    .then(() => {
-                                        this.setState({ ...INITIAL_STATE });
-                                        this.props.history.push(ROUTES.REGISTER_SUCCESS);
+                    <CheckboxSingle name="acceptedTerms" value="agree">
+                        I accept the <a target="_blank" href="/tandc.html">terms and conditions*</a>
+                    </CheckboxSingle>
 
-                                    })
+                </fieldset>
+            </>
+        )}
+    </RegisterForm>
 
-                                    .catch(error => {
-                                        c_log("Error"); c_log(error);
-                                        this.setState({ error, loading: false });
-
-                                    });
+export default RegisterFormA;
 
 
-
-                            }, 3000);
-                        }}
-                    >
-                        {() => {
-
-                            return (
-                                <>
-                                <SpinnerOverlay loading={loading}>
-                                    {error ? <Alert danger><ErrorMessage error={error} /></Alert> : null}
-                                    
-                                    <Form>
-                                        <fieldset className="form-group">
-                                            <legend>User Details</legend>
-                                            <TextInput type="email" name="email" label="Email" />
-
-                                            <TextInput type="password" name="passwordOne" label="Password" />
-
-                                            <TextInput type="password" name="passwordTwo" label="Confirm Password" />
-
-                                            <TextInput type="text" name="displayName" label="Display Name" />
-
-                                        </fieldset>
-
-                                        <fieldset>
-                                            <legend>Additional Details</legend>
-
-                                            <TextInput type="text" name="name" label="Name" />
-
-                                            <RadioGroup label="Gender*" name="gender" options={genderOptions} />
-
-                                            <Select label="Age" name="age" options={ageOptions} />
-
-                                            <Checkbox label="Sports*" name="sports" options={sportOptions} />
-
-                                            <TextArea name="about" label="A few words about you" lg />
-
-
-                                            <CheckboxSingle name="acceptedTerms" value="agree">
-                                                I accept the <a target="_blank" href="/tandc.html">terms and conditions*</a>
-                                            </CheckboxSingle>
-
-                                        </fieldset>
-
-                                        <Button primary type="submit" disabled={loading}>Register</Button>
-
-                                    </Form>
-                                    </SpinnerOverlay>
-                                </>
-                            );
-                        }}
-                    </Formik>
-                    {error ?
-                        <AlertModal id="registerError" title=""><Alert danger><ErrorMessage error={error} /></Alert></AlertModal>
-                        : null}
-                </div>
-           
-        )
-    }
-
-}
-
-
-const RegisterForm = compose(
-    withRouter
-)(RegisterFormBase);
-
-export default RegisterForm;

@@ -6,7 +6,7 @@ import {LinkContainer} from 'react-router-bootstrap'
 
 import * as ROUTES from '../../constants';
 
-import PrivateRoute from '../../util/PrivateRoute';
+import {PrivateRouteTypeA,PrivateRouteTypeB} from '../../util/PrivateRoute';
 import { AuthUserContext,withAuthentication } from '../../util/Session';
 import ErrorBoundary  from '../../util/ErrorBoundary'
 
@@ -15,7 +15,9 @@ import AccountPage from '../Account';
 import AccountPageB from '../AccountB';
 import LoginPage from '../Login'
 import LogoutPage from '../Logout'
-import RegisterForm,{RegisterFormB,RegisterSuccessPage, EmailConfirmedPage, ResetPasswordPage} from '../Register'
+import RegisterFormA,{RegisterFormB,ConfirmEmailAddress, EmailConfirmedPage, EmailConfirmedPageB, ResetPasswordPage} from '../Register'
+
+import {AccountLink} from '../Register/links'
 
 
 
@@ -30,19 +32,29 @@ const App = () => (
 );
 
 
+
+
+
 const Main = () => (
   <ErrorBoundary>
 <Container>
-        <Route exact path={ROUTES.REGISTER} component={RegisterForm} />
+        <Route exact path={ROUTES.REGISTER} component={RegisterFormA} />
         <Route path={ROUTES.REGISTER_B} component={RegisterFormB}/>
+        
+        <Route path={ROUTES.PLEASE_CONFIRM_EMAIL} component={ConfirmEmailAddress} />      
+        
+        <Route path={ROUTES.EMAIL_CONFIRMED_SUCCESS} component={EmailConfirmedPage} />  
+        <Route path={ROUTES.EMAIL_CONFIRMED_SUCCESS_B} component={EmailConfirmedPageB} />  
+
+        <PrivateRouteTypeA exact path={ROUTES.ACCOUNT} component={AccountPage}/>      
+        <PrivateRouteTypeB path={ROUTES.ACCOUNT_B} component={AccountPageB}/>      
+        
+
         <Route path={ROUTES.LOGIN} component={LoginPage} />
         <Route path={ROUTES.LOGOUT} component={LogoutPage} />
         <Route exact path={ROUTES.HOME} component={HomePage} />
-        <PrivateRoute exact path={ROUTES.ACCOUNT} component={AccountPage}/>      
-        <PrivateRoute path={ROUTES.ACCOUNT_B} component={AccountPageB} regType="B"/>      
         
-        <Route path={ROUTES.REGISTER_SUCCESS} component={RegisterSuccessPage} />      
-        <Route path={ROUTES.EMAIL_CONFIRMED} component={EmailConfirmedPage} />  
+        
         <Route path={ROUTES.RESET_PASSWORD} component={ResetPasswordPage} />      
   </Container>
   </ErrorBoundary>
@@ -62,11 +74,11 @@ const Header = () => (
         <Navbar.Toggler target="#navbarColor1" />
         <Collapse navbar id="navbarColor1">            
           <Navbar.Nav mr="auto">
-            {  authUser && authUser.canLogOn? <NavigationAuth authUser={authUser}/>: <NavigationNonAuth />}          
+            {  authUser ? <NavigationAuth />: <NavigationNonAuth />}          
           </Navbar.Nav>   
-          {authUser && authUser.canLogOn ?        
-          <Navbar.Text><Link to={ROUTES.ACCOUNT} style={{textDecoration:'none'}}><img src="./images/avatar.png" style={{height:'18px'}}/> { authUser.displayName?authUser.displayName:'' }</Link></Navbar.Text> 
-          :null} 
+          {authUser &&        
+          <Navbar.Text><AccountLink style={{textDecoration:'none'}}><img src="./images/avatar.png" style={{height:'18px'}}/> { authUser.displayName?authUser.displayName:'' }</AccountLink></Navbar.Text> 
+          } 
         </Collapse>
       </Navbar>  
      
@@ -78,29 +90,29 @@ const Header = () => (
 );
 
 
-const NavigationAuth = ({authUser}) => (
-  authUser.canLogOn?
+const NavigationAuth = () => (
+ 
   <>  
   <LinkContainer to={ROUTES.LOGOUT}><Nav.ItemLink>Logout</Nav.ItemLink></LinkContainer>
   <LinkContainer to={ROUTES.ACCOUNT}><Nav.ItemLink>My Profile</Nav.ItemLink></LinkContainer>  
   </>
-  :
-  null
+ 
 );
 
 const NavigationNonAuth = () => (
   <>
   <LinkContainer to={ROUTES.REGISTER}><Nav.ItemLink>Register type A</Nav.ItemLink></LinkContainer>
   <LinkContainer to={ROUTES.REGISTER_B}><Nav.ItemLink>Register type B</Nav.ItemLink></LinkContainer>
-  <LinkContainer to={ROUTES.LOGIN+"?type=A"}><Nav.ItemLink>Login type A</Nav.ItemLink></LinkContainer>  
-  <LinkContainer to={ROUTES.LOGIN+"?type=B"}><Nav.ItemLink>Login type B</Nav.ItemLink></LinkContainer>  
+  <LinkContainer to={ROUTES.LOGIN}><Nav.ItemLink>Login </Nav.ItemLink></LinkContainer>  
+  <LinkContainer to={ROUTES.ACCOUNT}><Nav.ItemLink>My Account type A</Nav.ItemLink></LinkContainer>  
+  <LinkContainer to={ROUTES.ACCOUNT_B}><Nav.ItemLink>My Account type B</Nav.ItemLink></LinkContainer>  
   <Nav.Item dropdown>
-              <Nav.Link dropdownToggle>My Account</Nav.Link>
+              <Nav.Link dropdownToggle>Drop down</Nav.Link>
               <Dropdown.Menu>
-                <Dropdown.Item>Place 'Seeking Crop Picking' Advert</Dropdown.Item>
-                <Dropdown.Item>Place 'Offering Crop Picking Work' Advert</Dropdown.Item>
+                <Dropdown.Item>Go here</Dropdown.Item>
+                <Dropdown.Item>Go there</Dropdown.Item>
                 <Dropdown.Divider />
-                <Dropdown.Item>Something else</Dropdown.Item>
+                <Dropdown.Item>Somewhere else</Dropdown.Item>
               </Dropdown.Menu>
             </Nav.Item>
   
