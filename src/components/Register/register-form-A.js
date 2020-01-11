@@ -54,8 +54,8 @@ const RegisterFormA = () =>
     initialFormValues={INITIAL_FORM_VALUES}
         validationScheme={VALIDATION_SCHEMA}
         regType="A"
-        pleaseConfirmEmailUrl={ROUTES.PLEASE_CONFIRM_EMAIL}
-        confirmedEmailSuccessUrl={ROUTES.EMAIL_CONFIRMED_SUCCESS}
+        pleaseConfirmEmailRoute={ROUTES.PLEASE_CONFIRM_EMAIL}
+        confirmedEmailSuccessUrl={ROUTES.EMAIL_CONFIRMED_SUCCESS_URL}
         >
         {() => (
             <>

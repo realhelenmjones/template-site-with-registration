@@ -53,7 +53,7 @@ class RegisterFormBase extends React.Component {
     render() {
         const { error, loading } = this.state;
         const {initialFormValues={}, validationScheme={}, regType="A",
-        pleaseConfirmEmailUrl, confirmedEmailSuccessUrl} = this.props;
+        pleaseConfirmEmailRoute, confirmedEmailSuccessUrl} = this.props;
         return (
             
                 <div style={{ padding: '10px' }}>
@@ -90,7 +90,7 @@ class RegisterFormBase extends React.Component {
                                     })
                                     .then(() => {
                                         this.setState({ ...INITIAL_STATE});
-                                        this.props.history.push(pleaseConfirmEmailUrl);
+                                        this.props.history.push(pleaseConfirmEmailRoute);
 
                                     })
 

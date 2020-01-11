@@ -38,13 +38,13 @@ const App = () => (
 const Main = () => (
   <ErrorBoundary>
 <Container>
-        <Route exact path={ROUTES.REGISTER} component={RegisterFormA} />
+        <Route  path={ROUTES.REGISTER} component={RegisterFormA} />
         <Route path={ROUTES.REGISTER_B} component={RegisterFormB}/>
         
         <Route path={ROUTES.PLEASE_CONFIRM_EMAIL} component={ConfirmEmailAddress} />      
         
-        <Route path={ROUTES.EMAIL_CONFIRMED_SUCCESS} component={EmailConfirmedPage} />  
-        <Route path={ROUTES.EMAIL_CONFIRMED_SUCCESS_B} component={EmailConfirmedPageB} />  
+        <Route  path={ROUTES.EMAIL_CONFIRMED_SUCCESS} component={EmailConfirmedPage} />  
+        <Route  path={ROUTES.EMAIL_CONFIRMED_SUCCESS_B} component={EmailConfirmedPageB} />  
 
         <PrivateRouteTypeA exact path={ROUTES.ACCOUNT} component={AccountPage}/>      
         <PrivateRouteTypeB path={ROUTES.ACCOUNT_B} component={AccountPageB}/>      

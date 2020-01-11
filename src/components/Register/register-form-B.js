@@ -30,8 +30,8 @@ const RegisterFormB = () =>
     initialFormValues={INITIAL_FORM_VALUES}
         validationScheme={VALIDATION_SCHEMA}
         regType="B"
-        pleaseConfirmEmailUrl={ROUTES.PLEASE_CONFIRM_EMAIL_B}
-        confirmedEmailSuccessUrl={ROUTES.EMAIL_CONFIRMED_SUCCESS_B}
+        pleaseConfirmEmailRoute={ROUTES.PLEASE_CONFIRM_EMAIL_B}
+        confirmedEmailSuccessUrl={ROUTES.EMAIL_CONFIRMED_SUCCESS_B_URL}
         >
         {() => (
             <>
