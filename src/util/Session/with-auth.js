@@ -1,7 +1,6 @@
 import React from 'react';
 import AuthUserContext from './context';
-import userService from '../../services/UserService'
-import { deriveDisplayNameAndTypeFromValue } from '../../domain/User';
+import userService, { deriveDisplayNameAndTypeFromValue } from '../../services/UserService'
 
 import {c_log} from '../../util/logger'
 

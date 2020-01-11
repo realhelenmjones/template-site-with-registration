@@ -5,11 +5,6 @@ import { c_log } from '../util/logger';
 import AppError from '../util/AppError';
 
 
-
-import { deriveDisplayNameAndTypeFromValue, deriveValueFromDisplayNameAndType } from '../domain/User';
-
-
-
 //TODO this exposes firebase, wrap it:
 const onAuthStateChanged = (cb) => auth.onAuthStateChanged(cb);
 
@@ -115,6 +110,21 @@ const findUsers = () => {
 
 }
 
+const deriveDisplayNameAndTypeFromValue = (value)=> {
+  let displayName = value;
+  let type="A";
+  let i = value.indexOf("_|_");
+      if (i>-1){
+        displayName = value.substring(0,i);
+        type = value.substring(value.length-1,value.length);
+      }
+      return {displayName,type};
+}
+
+const deriveValueFromDisplayNameAndType = (displayName, type="A") => {
+  return displayName+"_|_"+type;
+}
+
 
 const userService = {
   onAuthStateChanged,
@@ -125,8 +135,10 @@ const userService = {
   createAuthProfile,
   findUser,
   findUsers,
-  doPasswordReset
+  doPasswordReset,
   // createAuthProfile
 }
 
 export default userService
+
+export {deriveDisplayNameAndTypeFromValue,deriveValueFromDisplayNameAndType}
