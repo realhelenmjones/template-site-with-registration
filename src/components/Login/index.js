@@ -24,7 +24,7 @@ const LoginPage = () => (
 );
 
 const INITIAL_STATE = {
-  email: 'bluewaterblue@hotmail.com',
+  email: '',
   password: 'aaaaaaaa1q',
   error: null,
   loading : false
@@ -50,7 +50,7 @@ class LoginFormBase extends Component {
 
     userService
       .loginWithEmailAndPassword(email, password)
-      .then((user) => {
+      .then((user) => { c_log(user);
         this.setState({ ...INITIAL_STATE });
         
         if (!user.emailVerified)

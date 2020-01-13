@@ -31,7 +31,7 @@ const RegisterFormB = () =>
         validationScheme={VALIDATION_SCHEMA}
         regType="B"
         pleaseConfirmEmailRoute={ROUTES.PLEASE_CONFIRM_EMAIL_B}
-        confirmedEmailSuccessUrl={ROUTES.EMAIL_CONFIRMED_SUCCESS_B_URL}
+        confirmedEmailSuccessUrl={ROUTES.EMAIL_CONFIRMED_SUCCESS_URL_B}
         >
         {() => (
             <>

@@ -15,10 +15,10 @@ const withAuthentication = Component => {
       };
     }
 
-    componentDidMount() {c_log("withAuthentication mounted");
-        this.listener = userService.onAuthStateChanged(
+    componentDidMount() {c_log("!!!!!!!!!!!!!!!!!!!withAuthentication mounted");
+        this.listener = userService.subscribeUserChange(
         authUser => {
-        c_log("with_auth detected onAuthStateChanged"); c_log(authUser);
+        c_log("!!!!!!!!!!!!!!!!!!!!!with_auth detected onAuthStateChanged"); c_log(authUser);
           if (authUser && authUser.emailVerified){
             const {displayName, type} = deriveDisplayNameAndTypeFromValue(authUser.displayName);            
             const user = {email:authUser.email, displayName, type, emailVerified:authUser.emailVerified};                                
@@ -31,7 +31,7 @@ const withAuthentication = Component => {
     }
 
     componentWillUnmount() {
-      this.listener();
+      this.listener.unsubscribe();
     }
 
     render() { c_log("render AuthUserContext with authUser:");

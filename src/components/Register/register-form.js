@@ -74,7 +74,7 @@ class RegisterFormBase extends React.Component {
                                     .registerWithEmailAndPassword(email, passwordOne)
 
                                     .then(uid => {
-                                        c_log("oooeer"); 
+                                        c_log("oooeer "+uid); 
 
                                         return userService.createAuthProfile(
                                             uid,

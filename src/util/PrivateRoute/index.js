@@ -10,7 +10,7 @@ import { ConfirmEmailAddress, ConfirmEmailAddressB } from '../../components/Regi
 const PrivateRoute = ({ component: Component, ...props }) => (
   <div>
     <AuthUserContext.Consumer>
-      {authUser =>{console.log("!!!!!!!!!!!");console.log(props); console.log(authUser);
+      {authUser =>{console.log("!!!!!!!!!!! Private Route, props and authUser:");console.log(props); console.log(authUser);
         return authUser && (!props.regType || authUser.type == props.regType) ?
           <Route {...props} render={(innerProps) => <Component {...innerProps} />} />
           :

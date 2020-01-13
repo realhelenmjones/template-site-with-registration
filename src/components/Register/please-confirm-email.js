@@ -4,9 +4,10 @@ import { Container, Alert } from 'bootstrap-4-react';
 
 import ErrorMessage from '../ErrorMessage';
 import userService from '../../services/UserService'
+import * as ROUTES from '../../constants';
 import {c_log} from '../../util/logger'
 
-class ConfirmEmailAddress extends React.Component {
+class BaseConfirmEmailAddress extends React.Component {
 
   constructor(props) {
     super(props);
@@ -27,7 +28,7 @@ class ConfirmEmailAddress extends React.Component {
   sendEmailAgain(e) {
     e.preventDefault();
     this.doSetState(false,null);
-    userService.sendEmailVerification()
+    userService.sendEmailVerification(this.props.confirmedEmailSuccessUrl)
       .then(() => {
         this.doSetState(true,null);        
       })
@@ -58,7 +59,7 @@ class ConfirmEmailAddress extends React.Component {
               <Alert success>Email sent again. Note: it may take a few minutes to arrive.</Alert>
               : null}
                {error ?
-              <Alert warning><ErrorMessage error={error}/> Please try again later</Alert>
+              <Alert warning><ErrorMessage error={error}/></Alert>
               : null}
 
 
@@ -72,4 +73,11 @@ class ConfirmEmailAddress extends React.Component {
 
 }
 
-export default ConfirmEmailAddress;
+const ConfirmEmailAddress =()=>
+<BaseConfirmEmailAddress confirmedEmailSuccessUrl={ROUTES.EMAIL_CONFIRMED_SUCCESS_URL} />
+
+
+const ConfirmEmailAddressB =()=>
+<BaseConfirmEmailAddress confirmedEmailSuccessUrl={ROUTES.EMAIL_CONFIRMED_SUCCESS_URL_B} />
+
+export {ConfirmEmailAddress,ConfirmEmailAddressB};

@@ -2,18 +2,27 @@
 import { auth, db } from '../util/Firebase';
 
 import { c_log } from '../util/logger';
-import AppError from '../util/AppError';
+import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject' 
+
 
 
 //TODO this exposes firebase, wrap it:
-const onAuthStateChanged = (cb) => auth.onAuthStateChanged(cb);
+//const onAuthStateChanged = (cb) => auth.onAuthStateChanged(cb);
+
+const userSubject = new BehaviorSubject();
+
+
+const subscribeUserChange = (cb) => 
+  userSubject.asObservable().subscribe( cb );    
+
 
 //Promise<uid>
 const registerWithEmailAndPassword = (email, password) => {
   return new Promise((resolve, reject) => {
     auth.createUserWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        return resolve(userCredential.uid);
+      .then((userCredential) => { c_log("created user "+userCredential.uid);
+      c_log(userCredential);
+        return resolve(userCredential.user.uid);
       })
       .catch(error => {
         return reject(error);
@@ -37,7 +46,9 @@ const loginWithEmailAndPassword = (email, password) => {
         const email = fbUser.email;
         const emailVerified = fbUser.emailVerified;
         const { displayName, type } = deriveDisplayNameAndTypeFromValue(fbUser.displayName);
-        return resolve({ email, displayName, type, emailVerified });
+        const user = { email, displayName, type, emailVerified };
+        userSubject.next(user); 
+        return resolve(user);
       })
       .catch(error => {
         return reject(error);
@@ -50,7 +61,11 @@ const loginWithEmailAndPassword = (email, password) => {
 
 
 //Promise<void>
-const logout = () => auth.signOut();
+const logout = () => {
+  auth.signOut()
+  .then(() => userSubject.next()
+  )
+}
 
 
 //Promise<void>
@@ -63,7 +78,7 @@ const createAuthProfile = (uid, email, displayName, type) => {
   })
     //save in an application table as well (separate to the firebase authentication service) 
     .then(() => {
-      c_log("then createAuthProfile");
+      c_log("then createAuthProfile "+uid);
       return db.collection("users").doc(uid).set(
         {
           email,
@@ -127,7 +142,7 @@ const deriveValueFromDisplayNameAndType = (displayName, type="A") => {
 
 
 const userService = {
-  onAuthStateChanged,
+  subscribeUserChange,
   registerWithEmailAndPassword,
   sendEmailVerification,
   loginWithEmailAndPassword,

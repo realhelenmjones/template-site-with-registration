@@ -15,7 +15,7 @@ import AccountPage from '../Account';
 import AccountPageB from '../AccountB';
 import LoginPage from '../Login'
 import LogoutPage from '../Logout'
-import RegisterFormA,{RegisterFormB,ConfirmEmailAddress, EmailConfirmedPage, EmailConfirmedPageB, ResetPasswordPage} from '../Register'
+import RegisterFormA,{RegisterFormB,ConfirmEmailAddress,ConfirmEmailAddressB, EmailConfirmedPage, EmailConfirmedPageB, ResetPasswordPage} from '../Register'
 
 import {AccountLink} from '../Register/links'
 
@@ -42,6 +42,7 @@ const Main = () => (
         <Route path={ROUTES.REGISTER_B} component={RegisterFormB}/>
         
         <Route path={ROUTES.PLEASE_CONFIRM_EMAIL} component={ConfirmEmailAddress} />      
+        <Route path={ROUTES.PLEASE_CONFIRM_EMAIL_B} component={ConfirmEmailAddressB} />      
         
         <Route  path={ROUTES.EMAIL_CONFIRMED_SUCCESS} component={EmailConfirmedPage} />  
         <Route  path={ROUTES.EMAIL_CONFIRMED_SUCCESS_B} component={EmailConfirmedPageB} />  
@@ -77,7 +78,7 @@ const Header = () => (
             {  authUser ? <NavigationAuth />: <NavigationNonAuth />}          
           </Navbar.Nav>   
           {authUser &&        
-          <Navbar.Text><AccountLink style={{textDecoration:'none'}}><img src="./images/avatar.png" style={{height:'18px'}}/> { authUser.displayName?authUser.displayName:'' }</AccountLink></Navbar.Text> 
+          <Navbar.Text><AccountLink style={{textDecoration:'none'}}><img src="/images/avatar.png" style={{height:'18px'}}/> { authUser.displayName?authUser.displayName:'' }</AccountLink></Navbar.Text> 
           } 
         </Collapse>
       </Navbar>  

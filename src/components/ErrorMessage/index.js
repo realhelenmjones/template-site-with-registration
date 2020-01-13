@@ -1,5 +1,8 @@
 import React from 'react';
 
+function isDev(){
+    return (process && process.env && process.env.NODE_ENV && process.env.NODE_ENV=='development');
+}
 
 const ErrorMessage = ({ error }) => {
     if (error.code === 'auth/weak-password') {
@@ -23,11 +26,8 @@ const ErrorMessage = ({ error }) => {
     else if (error.code && error.code.indexOf('network')>-1) {
         return 'A network error has occurred.';
     }    
-    else if (!error.code){
-        return "An unexpected error occurred.";
-    }
     else{
-        return error.message;
+        return isDev()?error.message : "An unexpected error occurred.";
     }
 }
 
