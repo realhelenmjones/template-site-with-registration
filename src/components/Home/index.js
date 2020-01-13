@@ -50,14 +50,14 @@ const HomePage = () => (
         <Col col="sm">
              
           <Link to={ROUTES.REGISTER}>
-    <Button primary type="button" style={{width:'100%'}}>Register</Button>
+    <Button primary type="button" style={{width:'100%'}}>Register A</Button>
     </Link>
     
 </Col>
 <Col col="sm">
         
-          <Link to={ROUTES.CONTACT}>
-    <Button primary type="button" style={{width:'100%'}}>Contact Us</Button>
+          <Link to={ROUTES.REGISTER_B}>
+    <Button primary type="button" style={{width:'100%'}}>Register B</Button>
     </Link>
      
 </Col> 

@@ -68,7 +68,7 @@ const Header = () => (
   <React.Fragment>
   
      
-    <div className='titleBar'><Link to={ROUTES.HOME}>Million Pound Website</Link></div>    
+    <div className='titleBar'><Link to={ROUTES.HOME}>Website Template</Link></div>    
    
    <Navbar expand="lg" light bg="light" mb="3">      
         <Navbar.Toggler target="#navbarColor1" />
