@@ -1,9 +1,9 @@
 import React from 'react';
 import * as Yup from 'yup';
 
-import { TextArea, TextInput, RadioGroup, Select, Checkbox, CheckboxSingle } from '../../util/formik-bootstrap-controls'
+import { TextArea, TextInput, RadioGroup, Select, Checkbox, CheckboxSingle } from '_common/util/formik-bootstrap-controls'
 
-import * as ROUTES from '../../constants';
+import * as ROUTES from 'constants/routes';
 import RegisterForm from './register-form'
 
 const INITIAL_FORM_VALUES = {  

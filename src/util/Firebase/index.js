@@ -1,7 +1,7 @@
 import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
-import {c_log} from '../logger'
+
 
 const config = {
   apiKey: "AIzaSyBGfiG8HE_NAwKuZ36GdpeVFzYvCqMZU-Q",

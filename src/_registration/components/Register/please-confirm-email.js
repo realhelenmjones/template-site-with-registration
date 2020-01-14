@@ -4,8 +4,8 @@ import { Container, Alert } from 'bootstrap-4-react';
 
 import ErrorMessage from '../ErrorMessage';
 import userService from '../../services/UserService'
-import * as ROUTES from '../../constants';
-import {c_log} from '../../util/logger'
+import * as ROUTES from 'constants/routes';
+
 
 class BaseConfirmEmailAddress extends React.Component {
 

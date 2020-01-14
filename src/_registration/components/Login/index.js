@@ -4,12 +4,12 @@ import { compose } from 'recompose';
 import { Form, Button,Alert } from 'bootstrap-4-react';
 import queryString from 'query-string'; 
 
-import SpinnerOverlay from '../../util/SpinnerOverlay'
+import SpinnerOverlay from '_common/util/SpinnerOverlay'
 
 import ErrorMessage from '../ErrorMessage';
 import userService from '../../services/UserService'
-import * as ROUTES from '../../constants';
-import {c_log} from '../../util/logger'
+import * as ROUTES from 'constants/routes';
+import {c_log} from '_common/util/logger'
 
 const LoginPage = () => (
   <div>
@@ -54,14 +54,14 @@ class LoginFormBase extends Component {
         this.setState({ ...INITIAL_STATE });
         
         if (!user.emailVerified)
-          this.props.history.push(user.type=="B"?ROUTES.PLEASE_CONFIRM_EMAIL_B:ROUTES.PLEASE_CONFIRM_EMAIL);
+          this.props.history.push(user.type==="B"?ROUTES.PLEASE_CONFIRM_EMAIL_B:ROUTES.PLEASE_CONFIRM_EMAIL);
         else {
           const params = queryString.parse(this.props.location.search);
           c_log("fwd:"+params.fwd);
           if (params.fwd)
             this.props.history.push(params.fwd);
           else
-            this.props.history.push(user.type=="B"?ROUTES.ACCOUNT_B : ROUTES.ACCOUNT);
+            this.props.history.push(user.type==="B"?ROUTES.ACCOUNT_B : ROUTES.ACCOUNT);
         }
       })
       .catch(error => {

@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Form, Button,Alert } from 'bootstrap-4-react';
-import SpinnerOverlay from '../../util/SpinnerOverlay'
+import SpinnerOverlay from '_common/util/SpinnerOverlay'
 
 import ErrorMessage from '../ErrorMessage';
 import userService from '../../services/UserService'
-import { c_log } from '../../util/logger'
+
 
 class ResetPasswordPage extends React.Component {
 

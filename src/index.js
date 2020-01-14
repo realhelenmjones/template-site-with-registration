@@ -6,7 +6,7 @@ import './styles.css';
 import './bootstrap.min.css';
 import App from './components/App';
 
-if (!process.env.NODE_ENV == 'development')
+if (!process.env.NODE_ENV === 'development')
 Sentry.init({dsn: "https://2a12250f407a433da7668f219ef56a55@sentry.io/1872007"});
 
 

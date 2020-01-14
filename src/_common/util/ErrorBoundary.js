@@ -3,7 +3,7 @@ import React from 'react'
 import * as Sentry from '@sentry/browser';
 
 function isDev() {
-  return (process && process.env && process.env.NODE_ENV && process.env.NODE_ENV == 'development');
+  return (process && process.env && process.env.NODE_ENV && process.env.NODE_ENV === 'development');
 }
 
 class ErrorBoundary extends React.Component {

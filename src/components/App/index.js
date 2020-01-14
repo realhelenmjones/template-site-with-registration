@@ -1,23 +1,23 @@
 
 import React  from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import { Collapse, Navbar, Nav, Container, Dropdown, Row, Col } from 'bootstrap-4-react';
+import { Collapse, Navbar, Nav, Container, Dropdown } from 'bootstrap-4-react';
 import {LinkContainer} from 'react-router-bootstrap'
 
-import * as ROUTES from '../../constants';
+import * as ROUTES from '../../constants/routes';
 
-import {PrivateRouteTypeA,PrivateRouteTypeB} from '../../util/PrivateRoute';
-import { AuthUserContext,withAuthentication } from '../../util/Session';
-import ErrorBoundary  from '../../util/ErrorBoundary'
+import {PrivateRouteTypeA,PrivateRouteTypeB} from '../../_registration/util/PrivateRoute';
+import { AuthUserContext,withAuthentication } from '../../_registration/util/Session';
+import ErrorBoundary  from '../../_common/util/ErrorBoundary'
 
 import HomePage from '../Home'
 import AccountPage from '../Account';
 import AccountPageB from '../AccountB';
-import LoginPage from '../Login'
-import LogoutPage from '../Logout'
-import RegisterFormA,{RegisterFormB,ConfirmEmailAddress,ConfirmEmailAddressB, EmailConfirmedPage, EmailConfirmedPageB, ResetPasswordPage} from '../Register'
+import LoginPage from '../../_registration/components/Login'
+import LogoutPage from '../../_registration/components/Logout'
+import RegisterFormA,{RegisterFormB,ConfirmEmailAddress,ConfirmEmailAddressB, EmailConfirmedPage, EmailConfirmedPageB, ResetPasswordPage} from '../../_registration/components/Register'
 
-import {AccountLink} from '../Register/links'
+import {AccountLink} from '../../_registration/components/Register/links'
 
 
 
@@ -71,14 +71,14 @@ const Header = () => (
      
     <div className='titleBar'><Link to={ROUTES.HOME}>Website Template</Link></div>    
    
-   <Navbar expand="lg" light bg="light" mb="3">      
+   <Navbar expand="sm" light bg="light" mb="3">      
         <Navbar.Toggler target="#navbarColor1" />
         <Collapse navbar id="navbarColor1">            
           <Navbar.Nav mr="auto">
             {  authUser ? <NavigationAuth />: <NavigationNonAuth />}          
           </Navbar.Nav>   
           {authUser &&        
-          <Navbar.Text><AccountLink style={{textDecoration:'none'}}><img src="/images/avatar.png" style={{height:'18px'}}/> { authUser.displayName?authUser.displayName:'' }</AccountLink></Navbar.Text> 
+          <Navbar.Text><AccountLink style={{textDecoration:'none'}}><img src="/images/avatar.png" style={{height:'18px'}} alt="profile img"/> { authUser.displayName?authUser.displayName:'' }</AccountLink></Navbar.Text> 
           } 
         </Collapse>
       </Navbar>  
@@ -105,9 +105,9 @@ const NavigationNonAuth = () => (
   <LinkContainer to={ROUTES.REGISTER}><Nav.ItemLink>Register type A</Nav.ItemLink></LinkContainer>
   <LinkContainer to={ROUTES.REGISTER_B}><Nav.ItemLink>Register type B</Nav.ItemLink></LinkContainer>
   <LinkContainer to={ROUTES.LOGIN}><Nav.ItemLink>Login </Nav.ItemLink></LinkContainer>  
-  <LinkContainer to={ROUTES.ACCOUNT}><Nav.ItemLink>My Account type A</Nav.ItemLink></LinkContainer>  
-  <LinkContainer to={ROUTES.ACCOUNT_B}><Nav.ItemLink>My Account type B</Nav.ItemLink></LinkContainer>  
-  <Nav.Item dropdown>
+  <LinkContainer to={ROUTES.ACCOUNT}><Nav.ItemLink>Account type A</Nav.ItemLink></LinkContainer>  
+  <LinkContainer to={ROUTES.ACCOUNT_B}><Nav.ItemLink>Account type B</Nav.ItemLink></LinkContainer>  
+  {/* <Nav.Item dropdown>
               <Nav.Link dropdownToggle>Drop down</Nav.Link>
               <Dropdown.Menu>
                 <Dropdown.Item>Go here</Dropdown.Item>
@@ -115,7 +115,7 @@ const NavigationNonAuth = () => (
                 <Dropdown.Divider />
                 <Dropdown.Item>Somewhere else</Dropdown.Item>
               </Dropdown.Menu>
-            </Nav.Item>
+            </Nav.Item> */}
   
   </>
 );

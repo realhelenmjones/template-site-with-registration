@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {Row,Col, Card, Container,Button } from 'bootstrap-4-react'
-import * as ROUTES from '../../constants';
+import * as ROUTES from '../../constants/routes';
 
 import { Link } from 'react-router-dom';
 

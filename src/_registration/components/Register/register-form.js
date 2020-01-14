@@ -8,11 +8,11 @@ import * as Yup from 'yup';
 
 import userService from '../../services/UserService'
 import ErrorMessage from '../ErrorMessage'
-import { AlertModal } from '../Modals'
+import { AlertModal } from '_common/components/Modals'
 
 
-import SpinnerOverlay from '../../util/SpinnerOverlay'
-import {c_log} from '../../util/logger'
+import SpinnerOverlay from '_common/util/SpinnerOverlay'
+import {c_log} from '_common/util/logger'
 
 const INITIAL_FORM_VALUES = {
     email: '',
