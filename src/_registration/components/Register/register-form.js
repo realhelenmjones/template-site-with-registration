@@ -12,7 +12,7 @@ import { AlertModal } from '_common/components/Modals'
 
 
 import SpinnerOverlay from '_common/util/SpinnerOverlay'
-import {c_log} from '_common/util/logger'
+// import {c_log} from '_common/util/logger'
 
 const INITIAL_FORM_VALUES = {
     email: '',
@@ -52,82 +52,88 @@ class RegisterFormBase extends React.Component {
 
     render() {
         const { error, loading } = this.state;
-        const {initialFormValues={}, validationScheme={}, regType="A",
-        pleaseConfirmEmailRoute, confirmedEmailSuccessUrl} = this.props;
+        const { initialFormValues = {}, validationScheme = {}, regType = "A",
+            pleaseConfirmEmailRoute, confirmedEmailSuccessUrl } = this.props;
         return (
-            
-                <div style={{ padding: '10px' }}>
-                    <Formik
-                        initialValues={{...INITIAL_FORM_VALUES, ...initialFormValues}}
-                        validationSchema={Yup.object().shape({...VALIDATION_SCHEMA, ...validationScheme})}
-                        onSubmit={(values, { setSubmitting, setFieldTouched }) => {
-                            const { email, passwordOne,  displayName } = values;
-                            c_log("SUBMIT:" + JSON.stringify(values));
 
-                            this.setState({ loading: true, error: null });
-                            
-                            setTimeout(() => {
-
-                                setSubmitting(false);
-
-                                userService
-                                    .registerWithEmailAndPassword(email, passwordOne)
-
-                                    .then(uid => {
-                                        c_log("oooeer "+uid); 
-
-                                        return userService.createAuthProfile(
-                                            uid,
-                                            email,
-                                            displayName,
-                                            regType
-                                        );
+            <div style={{ padding: '10px' }}>
+                <Formik
+                    initialValues={{ ...INITIAL_FORM_VALUES, ...initialFormValues }}
+                    validationSchema={Yup.object().shape({ ...VALIDATION_SCHEMA, ...validationScheme })}
+                    onSubmit={(values, { setSubmitting, setFieldTouched }) => {
+                        const { email, passwordOne, displayName } = values;
 
 
-                                    })
-                                    .then(() => {
-                                        return userService.sendEmailVerification(confirmedEmailSuccessUrl);
-                                    })
-                                    .then(() => {
-                                        this.setState({ ...INITIAL_STATE});
-                                        this.props.history.push(pleaseConfirmEmailRoute);
+                        this.setState({ loading: true, error: null });
 
-                                    })
+                        setTimeout(() => {
 
-                                    .catch(error => {
-                                        c_log("Reg Error"); c_log(error);
-                                        this.setState({ error, loading: false });
+                            setSubmitting(false);
 
-                                    });
+                            userService
+                                .registerWithEmailAndPassword(email, passwordOne)
+
+                                .then(uid => {
+
+                                    return userService.createAuthProfile(
+                                        uid,
+                                        email,
+                                        displayName,
+                                        regType
+                                    );
+
+
+                                })
+                                .then((uid) => {
+                                    if (this.props.createFullProfile) {
+                                        return this.props.createFullProfile({ uid, ...values });
+                                    }
+                                    else {
+                                        return Promise.resolve();
+                                    }
+                                })
+                                .then(() => {
+                                    return userService.sendEmailVerification(confirmedEmailSuccessUrl);
+                                })
+                                .then(() => {
+                                    this.setState({ ...INITIAL_STATE });
+                                    this.props.history.push(pleaseConfirmEmailRoute);
+
+                                })
+
+                                .catch(error => {                                    
+                                    this.setState({ error, loading: false });
+
+                                });
 
 
 
-                            }, 3000);
-                        }}
-                    >
-                        {() => {
+                        }, 3000);
+                    }}
+                >
+                    {() => {
 
-                            return (
-                                <>
+                        return (
+                            <>
                                 <SpinnerOverlay loading={loading}>
                                     {error ? <Alert danger><ErrorMessage error={error} /></Alert> : null}
-                                    
+
                                     <Form>
-                                       {this.props.children()}
+                                        {this.props.children()}
 
                                         <Button primary type="submit" disabled={loading}>Register</Button>
 
                                     </Form>
-                                    </SpinnerOverlay>
-                                </>
-                            );
-                        }}
-                    </Formik>
-                    {error ?
-                        <AlertModal id="registerError" title=""><Alert danger><ErrorMessage error={error} /></Alert></AlertModal>
-                        : null}
-                </div>
-            
+                                </SpinnerOverlay>
+                            </>
+                        );
+                    }}
+                </Formik>
+                {error ?
+                    <AlertModal id="registerError" title=""><Alert danger><ErrorMessage error={error} /></Alert></AlertModal>
+                    : null}
+            </div>
+
         )
     }
 

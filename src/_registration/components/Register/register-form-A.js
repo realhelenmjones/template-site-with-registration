@@ -5,6 +5,7 @@ import { TextArea, TextInput, RadioGroup, Select, Checkbox, CheckboxSingle } fro
 
 import * as ROUTES from 'constants/routes';
 import RegisterForm from './register-form'
+import userService from '_registration/services/UserService';
 
 const INITIAL_FORM_VALUES = {  
     about: '',
@@ -35,7 +36,7 @@ const sportOptions = [
 ];
 
 const VALIDATION_SCHEMA = {
-    displayName: Yup.string()
+    name: Yup.string()
         .required('Required'),
     about: Yup.string(),
     // .required('Required'),
@@ -56,6 +57,7 @@ const RegisterFormA = () =>
         regType="A"
         pleaseConfirmEmailRoute={ROUTES.PLEASE_CONFIRM_EMAIL}
         confirmedEmailSuccessUrl={ROUTES.EMAIL_CONFIRMED_SUCCESS_URL}
+        createFullProfile={(args)=>userService.exampleCreateFullProfile(args)}
         >
         {() => (
             <>

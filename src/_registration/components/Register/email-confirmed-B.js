@@ -1,14 +1,19 @@
 import React from 'react';
 
-import { Container } from 'bootstrap-4-react';
+import { Container, Button } from 'bootstrap-4-react';
+import { Link } from 'react-router-dom';
 
-const EmailConfirmedPage= ()=>(
+import * as ROUTES from 'constants/routes';
+
+const EmailConfirmedPageB= ()=>(
   <>
     <Container>
         <h1>Account B - You are now registered</h1>
 
         
-        
+        <p><Link to={ROUTES.ACCOUNT_B}>
+    <Button primary type="button" style={{width:'100%'}}>Your Account</Button>
+    </Link></p>
         
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
         
@@ -29,4 +34,4 @@ const EmailConfirmedPage= ()=>(
 </>
 )
 
-export default EmailConfirmedPage;
+export default EmailConfirmedPageB;

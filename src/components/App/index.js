@@ -6,18 +6,18 @@ import {LinkContainer} from 'react-router-bootstrap'
 
 import * as ROUTES from '../../constants/routes';
 
-import {PrivateRouteTypeA,PrivateRouteTypeB} from '../../_registration/util/PrivateRoute';
-import { AuthUserContext,withAuthentication } from '../../_registration/util/Session';
-import ErrorBoundary  from '../../_common/util/ErrorBoundary'
+import {PrivateRouteTypeA,PrivateRouteTypeB} from '_registration/util/PrivateRoute';
+import { AuthUserContext,withAuthentication } from '_registration/util/Session';
+import ErrorBoundary  from '_common/util/ErrorBoundary'
 
 import HomePage from '../Home'
 import AccountPage from '../Account';
 import AccountPageB from '../AccountB';
-import LoginPage from '../../_registration/components/Login'
-import LogoutPage from '../../_registration/components/Logout'
+import LoginPage from '_registration/components/Login'
+import LogoutPage from '_registration/components/Logout'
 import RegisterFormA,{RegisterFormB,ConfirmEmailAddress,ConfirmEmailAddressB, EmailConfirmedPage, EmailConfirmedPageB, ResetPasswordPage} from '../../_registration/components/Register'
 
-import {AccountLink} from '../../_registration/components/Register/links'
+import {AccountLink, AccountLinkContainer} from '_registration/components/Register/links'
 
 
 
@@ -92,12 +92,10 @@ const Header = () => (
 
 
 const NavigationAuth = () => (
- 
   <>  
   <LinkContainer to={ROUTES.LOGOUT}><Nav.ItemLink>Logout</Nav.ItemLink></LinkContainer>
-  <LinkContainer to={ROUTES.ACCOUNT}><Nav.ItemLink>My Profile</Nav.ItemLink></LinkContainer>  
-  </>
- 
+  <AccountLinkContainer ><Nav.ItemLink>My Profile</Nav.ItemLink></AccountLinkContainer>  
+  </> 
 );
 
 const NavigationNonAuth = () => (

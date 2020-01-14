@@ -1,6 +1,9 @@
 import React from 'react';
 
-import { Container } from 'bootstrap-4-react';
+import { Container, Button } from 'bootstrap-4-react';
+import { Link } from 'react-router-dom';
+
+import * as ROUTES from 'constants/routes';
 
 const EmailConfirmedPage= ()=>(
   <>
@@ -8,7 +11,9 @@ const EmailConfirmedPage= ()=>(
         <h1>Account A - You are now registered</h1>
 
         
-        
+        <p><Link to={ROUTES.ACCOUNT}>
+    <Button primary type="button" style={{width:'100%'}}>Your Account</Button>
+    </Link></p>
         
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
         

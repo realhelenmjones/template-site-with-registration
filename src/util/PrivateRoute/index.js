@@ -10,7 +10,7 @@ import { AuthUserContext } from '../../_registration/util/Session';
 const PrivateRoute = ({ component: Component, ...props }) => (
   <div>
     <AuthUserContext.Consumer>
-      {authUser =>{console.log("!!!!!!!!!!! Private Route, props and authUser:");console.log(props); console.log(authUser);
+      {authUser =>{
         return authUser && (!props.regType || authUser.type === props.regType) ?
           <Route {...props} render={(innerProps) => <Component {...innerProps} />} />
           :

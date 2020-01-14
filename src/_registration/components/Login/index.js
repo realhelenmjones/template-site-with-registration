@@ -9,7 +9,7 @@ import SpinnerOverlay from '_common/util/SpinnerOverlay'
 import ErrorMessage from '../ErrorMessage';
 import userService from '../../services/UserService'
 import * as ROUTES from 'constants/routes';
-import {c_log} from '_common/util/logger'
+// import {c_log} from '_common/util/logger'
 
 const LoginPage = () => (
   <div>
@@ -41,23 +41,25 @@ class LoginFormBase extends Component {
   onSubmit = event => {
 
     event.preventDefault();    
-    this.setState({ loading:true, error:null });
+   
 
     if (this.isInvalid())
       return;
+
+      this.setState({ loading:true, error:null });
 
     const { email, password } = this.state;
 
     userService
       .loginWithEmailAndPassword(email, password)
-      .then((user) => { c_log(user);
+      .then((user) => { 
         this.setState({ ...INITIAL_STATE });
         
         if (!user.emailVerified)
           this.props.history.push(user.type==="B"?ROUTES.PLEASE_CONFIRM_EMAIL_B:ROUTES.PLEASE_CONFIRM_EMAIL);
         else {
           const params = queryString.parse(this.props.location.search);
-          c_log("fwd:"+params.fwd);
+          
           if (params.fwd)
             this.props.history.push(params.fwd);
           else
@@ -102,7 +104,7 @@ class LoginFormBase extends Component {
           />
         </Form.Group>
 
-        <Button primary type="submit" disabled={this.isInvalid()}> Login</Button>
+        <Button primary type="submit" > Login</Button>
         {error && <Alert danger style={{marginTop:'10px'}}><ErrorMessage error={error} /></Alert>}
       </Form>
       </SpinnerOverlay>
