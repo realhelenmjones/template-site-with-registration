@@ -6,8 +6,8 @@ import {LinkContainer} from 'react-router-bootstrap'
 
 import * as ROUTES from '../../constants/routes';
 
-import {PrivateRouteTypeA,PrivateRouteTypeB} from '_registration/util/private-route';
-import { AuthUserContext,withAuthentication } from '_registration/util/session';
+import {PrivateRouteTypeA,PrivateRouteTypeB} from '_registration/util/tmp-private-route';
+import { AuthUserContext,withAuthentication } from '_registration/util/tmp-session';
 import ErrorBoundary  from '_common/util/ErrorBoundary'
 
 import HomePage from '../tmp-home'

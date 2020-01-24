@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Redirect } from 'react-router-dom'
 
-import { AuthUserContext } from '../session';
+import { AuthUserContext } from '../tmp-session';
 
 
 const PrivateRoute = ({ component: Component, ...props }) => (

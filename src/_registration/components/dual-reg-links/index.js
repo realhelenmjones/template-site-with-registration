@@ -3,7 +3,7 @@ import {Link } from 'react-router-dom';
 
 import {LinkContainer} from 'react-router-bootstrap'
 
-import { AuthUserContext } from '../../util/session';
+import { AuthUserContext } from '../../util/tmp-session';
 
 const AccountLink = (props) => (
     <AuthUserContext.Consumer>
