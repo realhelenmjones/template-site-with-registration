@@ -4,7 +4,7 @@ import { useHistory, Link } from "react-router-dom";
 import * as ROUTES from 'constants/routes';
 
 
-import LoginForm  from '_registration/components/login';
+import LoginForm  from '_registration/components/tmp-login';
 
 
 const Login = () => {
