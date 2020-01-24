@@ -3,14 +3,12 @@ import {Link } from 'react-router-dom';
 
 import {LinkContainer} from 'react-router-bootstrap'
 
-import * as ROUTES from 'constants/routes';
-import { AuthUserContext } from '../../util/Session';
-
+import { AuthUserContext } from '../../util/session';
 
 const AccountLink = (props) => (
     <AuthUserContext.Consumer>
         {authUser => {
-            const to = authUser.type === "B" ? ROUTES.ACCOUNT_B : ROUTES.ACCOUNT;
+            const to = authUser.type === "B" ? props.accountRouteB : props.accountRoute;
             return <Link to={to} {...props} >{props.children}</Link>
         }}
      </AuthUserContext.Consumer>
@@ -21,7 +19,7 @@ const AccountLink = (props) => (
 const AccountLinkContainer = (props) => (
     <AuthUserContext.Consumer>
         {authUser => {
-            const to = authUser.type === "B" ? ROUTES.ACCOUNT_B : ROUTES.ACCOUNT;
+            const to = authUser.type === "B" ? props.accountRouteB : props.accountRoute;
             return <LinkContainer to={to} {...props} >{props.children}</LinkContainer>
         }}
      </AuthUserContext.Consumer>

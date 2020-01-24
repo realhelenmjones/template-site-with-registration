@@ -1,23 +1,29 @@
 import React from 'react';
 import { compose } from 'recompose';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
+import PropTypes from "prop-types";
+import urlPropType from 'url-prop-type';
+
+import * as Sentry from '@sentry/browser';
 import { Button, Alert } from 'bootstrap-4-react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 
-
+import EmailVerificationError from '../../util/email-verification-error'
 import userService from '../../services/UserService'
-import ErrorMessage from '../ErrorMessage'
-import { AlertModal } from '_common/components/Modals'
+import ErrorMessage from '_common/components/ErrorMessage';
+// import { AlertModal } from '_common/components/Modals'
 
 
 import SpinnerOverlay from '_common/util/SpinnerOverlay'
+import { c_error } from '_common/util/logger';
 // import {c_log} from '_common/util/logger'
 
 const INITIAL_FORM_VALUES = {
     email: '',
     passwordOne: 'aaaaaaaa1q',
-    passwordTwo: 'aaaaaaaa1q'
+    passwordTwo: 'aaaaaaaa1q',
+    displayName: ''
 };
 
 
@@ -28,19 +34,25 @@ const VALIDATION_SCHEMA = {
         .required('Required'),
     passwordTwo: Yup.string()
         .required('Required')
-        .oneOf([Yup.ref('passwordOne'), null], 'Passwords must match')
+        .oneOf([Yup.ref('passwordOne'), null], 'Passwords must match'),
+    displayName:
+        Yup.string()
+            .required('Required')
+
 }
 
 const INITIAL_STATE = {
     error: null,
-    loading: false
+    loading: false,
+    redirect: undefined
 };
+
 
 class RegisterFormBase extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = INITIAL_STATE;
     }
 
     componentDidUpdate() {
@@ -53,91 +65,117 @@ class RegisterFormBase extends React.Component {
     render() {
         const { error, loading } = this.state;
         const { initialFormValues = {}, validationScheme = {}, regType = "A",
-            pleaseConfirmEmailRoute, confirmedEmailSuccessUrl } = this.props;
-        return (
+        pleaseConfirmEmail, confirmedEmailSuccessUrl, 
+            submitLabel = "Register", createFullProfile } = this.props;
 
-            <div style={{ padding: '10px' }}>
+
+        return (
+            <>
+                
                 <Formik
                     initialValues={{ ...INITIAL_FORM_VALUES, ...initialFormValues }}
-                    validationSchema={Yup.object().shape({ ...VALIDATION_SCHEMA, ...validationScheme })}
+                    validationSchema={() => Yup.object().shape({ ...VALIDATION_SCHEMA, ...validationScheme })}
                     onSubmit={(values, { setSubmitting, setFieldTouched }) => {
-                        const { email, passwordOne, displayName } = values;
+                        try {
+                            const { email, passwordOne, displayName } = values;
 
 
-                        this.setState({ loading: true, error: null });
+                            this.setState({ loading: true, error: null });
 
-                        setTimeout(() => {
 
                             setSubmitting(false);
 
                             userService
-                                .registerWithEmailAndPassword(email, passwordOne)
-
+                                .verifyDisplayNameUnique(displayName)
+                                .then(() =>
+                                    userService.registerWithEmailAndPassword({ email, password: passwordOne })
+                                )
                                 .then(uid => {
 
-                                    return userService.createAuthProfile(
-                                        uid,
+                                    return userService.createAuthProfile({
+                                        password: passwordOne,
                                         email,
                                         displayName,
                                         regType
+                                    }
                                     );
 
 
                                 })
                                 .then((uid) => {
-                                    if (this.props.createFullProfile) {
-                                        return this.props.createFullProfile({ uid, ...values });
+                                    if (createFullProfile) {
+                                        return createFullProfile({ ...values });
                                     }
                                     else {
                                         return Promise.resolve();
                                     }
                                 })
                                 .then(() => {
-                                    return userService.sendEmailVerification(confirmedEmailSuccessUrl);
+                                    return userService.sendEmailVerification(confirmedEmailSuccessUrl);                                 
+                                })                                
+                                .catch(error => {
+                                    if (error instanceof EmailVerificationError) {
+                                        Sentry.captureException(error);
+                                        c_error(error);
+                                    }
+                                    else
+                                        throw(error);                                 
                                 })
                                 .then(() => {
-                                    this.setState({ ...INITIAL_STATE });
-                                    this.props.history.push(pleaseConfirmEmailRoute);
-
+                                    pleaseConfirmEmail();
+                                })
+                                .catch(error => {
+                                    this.setState({ error, loading: false });
                                 })
 
-                                .catch(error => {                                    
-                                    this.setState({ error, loading: false });
-
-                                });
-
-
-
-                        }, 3000);
+                        }
+                        catch (error) {
+                            this.setState({ error, loading: false });
+                        }
                     }}
                 >
                     {() => {
+                        const { redirect } = this.state;
+                        if (redirect)
+                            return <Redirect to={redirect} />
 
                         return (
                             <>
                                 <SpinnerOverlay loading={loading}>
-                                    {error ? <Alert danger><ErrorMessage error={error} /></Alert> : null}
+                                    <div className="formContainer">
+                                        {error ? <Alert danger><ErrorMessage error={error} /></Alert> : null}
 
-                                    <Form>
-                                        {this.props.children()}
+                                        <Form>
+                                            {this.props.children()}
 
-                                        <Button primary type="submit" disabled={loading}>Register</Button>
+                                            <Button primary lg type="submit" disabled={loading}>{submitLabel}</Button>
 
-                                    </Form>
+                                        </Form>
+                                    </div>
                                 </SpinnerOverlay>
                             </>
                         );
                     }}
                 </Formik>
-                {error ?
+                {/* {error ?
                     <AlertModal id="registerError" title=""><Alert danger><ErrorMessage error={error} /></Alert></AlertModal>
-                    : null}
-            </div>
+                    : null} */}
 
+            </>
         )
     }
 
 }
+
+RegisterFormBase.propTypes = {
+    validationScheme: PropTypes.object,
+    initialFormValues: PropTypes.object.isRequired,
+    regType: PropTypes.string,
+    pleaseConfirmEmail: PropTypes.func.isRequired,
+    confirmedEmailSuccessUrl: urlPropType.isRequired,    
+    submitLabel: PropTypes.string,
+    createFullProfile: PropTypes.func
+};
 
 
 const RegisterForm = compose(

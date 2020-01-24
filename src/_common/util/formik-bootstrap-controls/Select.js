@@ -11,8 +11,8 @@ const Select = ({label, name, options, id=name }) => {
 
   return (
     <Form.Group>
-      <label htmlFor="{id}">{label}</label>
-      <Form.Select id="{id}" valid={valid} name={name} {...field}>
+      <label htmlFor={id}>{label}</label>
+      <Form.Select id={id} valid={valid} name={name} {...field}>
       {options.map(option => {
         const key= option.key ? option.key : option.value;
         return (

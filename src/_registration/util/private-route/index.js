@@ -1,9 +1,7 @@
 import React from "react";
 import { Route, Redirect } from 'react-router-dom'
 
-
-import * as ROUTES from 'constants/routes';
-import { AuthUserContext } from '../Session';
+import { AuthUserContext } from '../session';
 
 
 const PrivateRoute = ({ component: Component, ...props }) => (
@@ -13,7 +11,8 @@ const PrivateRoute = ({ component: Component, ...props }) => (
         return authUser && (!props.regType || authUser.type === props.regType) ?
           <Route {...props} render={(innerProps) => <Component {...innerProps} />} />
           :
-          <Route {...props} render={(innerProps) => <Redirect to={ROUTES.LOGIN+"?fwd="+encodeURIComponent(props.path)} />} />
+          <Route {...props} render={(innerProps) => <Redirect to={"/login?fwd="+encodeURIComponent(props.path)} />} />
+          //TODO Redirect: use state instead of fwd
       }}
     </AuthUserContext.Consumer>
   </div>

@@ -1,33 +1,25 @@
 import React, { Component } from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter, Link, Redirect } from 'react-router-dom';
+import PropTypes from "prop-types";
 import { compose } from 'recompose';
-import { Form, Button,Alert } from 'bootstrap-4-react';
-import queryString from 'query-string'; 
+import { Form, Button, Alert } from 'bootstrap-4-react';
+import queryString from 'query-string';
 
 import SpinnerOverlay from '_common/util/SpinnerOverlay'
 
-import ErrorMessage from '../ErrorMessage';
+import ErrorMessage from '_common/components/ErrorMessage';
 import userService from '../../services/UserService'
-import * as ROUTES from 'constants/routes';
+
 // import {c_log} from '_common/util/logger'
 
-const LoginPage = () => (
-  <div>
-    <LoginForm />
-    <p>
-        <Link to={ROUTES.REGISTER}>Register</Link> |  
-        &nbsp;<Link to={ROUTES.RESET_PASSWORD}>Forgot Password</Link>
-    
-        
-    </p>
-  </div>
-);
+
 
 const INITIAL_STATE = {
   email: '',
   password: 'aaaaaaaa1q',
   error: null,
-  loading : false
+  loading: false,
+  redirect: undefined
 };
 
 class LoginFormBase extends Component {
@@ -37,43 +29,48 @@ class LoginFormBase extends Component {
     this.state = { ...INITIAL_STATE };
   }
 
-  
+
   onSubmit = event => {
+    try {
+      event.preventDefault();
 
-    event.preventDefault();    
-   
 
-    if (this.isInvalid())
-      return;
+      if (this.isInvalid())
+        return;
 
-      this.setState({ loading:true, error:null });
+      this.setState({ loading: true, error: null });
 
-    const { email, password } = this.state;
+      const { email, password } = this.state;
+      const {success, confirmEmail} = this.props;
 
-    userService
-      .loginWithEmailAndPassword(email, password)
-      .then((user) => { 
-        this.setState({ ...INITIAL_STATE });
-        
-        if (!user.emailVerified)
-          this.props.history.push(user.type==="B"?ROUTES.PLEASE_CONFIRM_EMAIL_B:ROUTES.PLEASE_CONFIRM_EMAIL);
-        else {
-          const params = queryString.parse(this.props.location.search);
-          
-          if (params.fwd)
-            this.props.history.push(params.fwd);
-          else
-            this.props.history.push(user.type==="B"?ROUTES.ACCOUNT_B : ROUTES.ACCOUNT);
-        }
-      })
-      .catch(error => {
-        this.setState({ error, loading:false });
-      });
+      userService
+        .loginWithEmailAndPassword({ email, password })
+        .then((user) => {
 
-      
+          let redirect;
+          if (!user.emailVerified)
+            return confirmEmail()
+          else {
+            const params = queryString.parse(this.props.location.search);
+
+            if (params.fwd)
+              redirect = params.fwd;
+            else
+            return success()
+          }
+          this.setState({ ...INITIAL_STATE, redirect });
+        })
+        .catch(error => {
+          this.setState({ error, loading: false });
+        });
+
+    }
+    catch (error) {
+      this.setState({ ...INITIAL_STATE, error });
+    }
   };
 
-  isInvalid(){
+  isInvalid() {
     const { email, password } = this.state;
     return password === '' || email === '';
   }
@@ -83,39 +80,51 @@ class LoginFormBase extends Component {
   };
 
   render() {
+    const { redirect } = this.state;
+    if (redirect)
+      return <Redirect to={redirect} />
+
     const { email, password, error, loading } = this.state;
     return (
       <>
-      <SpinnerOverlay loading={loading}>
-      <Form onSubmit={this.onSubmit}>
-        <Form.Group>
-          <label htmlFor="email">Email address</label>
-          <Form.Input type="email" id="email" name="email"
-            value={email}
-            onChange={this.onChange} />
+        <h1 className="formHeading">Login</h1>
+        <SpinnerOverlay loading={loading}>
+          <div className="formContainer">
+            <Form onSubmit={this.onSubmit} method='POST'>
+              <Form.Group>
+                <label htmlFor="email">Email address</label>
+                <Form.Input type="email" id="email" name="email"
+                  value={email}
+                  onChange={this.onChange} />
 
-        </Form.Group>
-        <Form.Group>
-          <label htmlFor="password">Password</label>
-          <Form.Input type="password" id="password"
-            name="password"
-            value={password}
-            onChange={this.onChange}
-          />
-        </Form.Group>
+              </Form.Group>
+              <Form.Group>
+                <label htmlFor="password">Password</label>
+                <Form.Input type="password" id="password"
+                  name="password"
+                  value={password}
+                  onChange={this.onChange}
+                />
+              </Form.Group>
 
-        <Button primary type="submit" > Login</Button>
-        {error && <Alert danger style={{marginTop:'10px'}}><ErrorMessage error={error} /></Alert>}
-      </Form>
-      </SpinnerOverlay>
+              <Button primary lg type="submit" disabled={loading}> Login</Button>
+              {error && <Alert danger style={{ marginTop: '10px' }}><ErrorMessage error={error} /></Alert>}
+            </Form>
+          </div>
+        </SpinnerOverlay>
+
       </>
     );
   }
 }
 
+LoginFormBase.propTypes = {
+  success: PropTypes.func.isRequired,
+  confirmEmail: PropTypes.func.isRequired
+};
+
 const LoginForm = compose(
   withRouter
 )(LoginFormBase);
 
-export default LoginPage;
-export { LoginForm };
+export default LoginForm;

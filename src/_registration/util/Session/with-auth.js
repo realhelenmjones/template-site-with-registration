@@ -1,6 +1,6 @@
 import React from 'react';
 import AuthUserContext from './context';
-import userService, { deriveDisplayNameAndTypeFromValue } from '../../services/UserService'
+import userService  from '../../services/UserService'
 
 // import {c_log} from '_common/util/logger'
 

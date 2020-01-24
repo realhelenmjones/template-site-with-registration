@@ -1,0 +1,10 @@
+.icon, .icon-action {
+    width:1rem;     
+}
+
+.icon-action {
+    cursor:pointer;
+}
+.big{
+    width:2rem;
+}

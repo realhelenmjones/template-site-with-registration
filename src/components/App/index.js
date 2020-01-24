@@ -6,18 +6,21 @@ import {LinkContainer} from 'react-router-bootstrap'
 
 import * as ROUTES from '../../constants/routes';
 
-import {PrivateRouteTypeA,PrivateRouteTypeB} from '_registration/util/PrivateRoute';
-import { AuthUserContext,withAuthentication } from '_registration/util/Session';
+import {PrivateRouteTypeA,PrivateRouteTypeB} from '_registration/util/private-route';
+import { AuthUserContext,withAuthentication } from '_registration/util/session';
 import ErrorBoundary  from '_common/util/ErrorBoundary'
 
-import HomePage from '../Home'
-import AccountPage from '../Account';
-import AccountPageB from '../AccountB';
-import LoginPage from '_registration/components/Login'
-import LogoutPage from '_registration/components/Logout'
-import RegisterFormA,{RegisterFormB,ConfirmEmailAddress,ConfirmEmailAddressB, EmailConfirmedPage, EmailConfirmedPageB, ResetPasswordPage} from '../../_registration/components/Register'
+import HomePage from '../home'
+import AccountPage from '../account';
+import AccountPageB from '../accountB';
+import LogoutPage from '_registration/components/logout'
+import ResetPassword from '_registration/components/reset-password'
+import {AccountLink,AccountLinkContainer} from '_registration/components/dual-reg-links'
+import {RegisterFormA,RegisterFormB,ActivateAccountMessage, ActivateAccountMessageB, 
+  EmailConfirmed, EmailConfirmedB, ConfirmNewEmailMessage,ConfirmNewEmailMessageB,
+  Login,UpdateEmail, UpdateEmailB} from 'components/register'
 
-import {AccountLink, AccountLinkContainer} from '_registration/components/Register/links'
+
 
 
 
@@ -40,23 +43,25 @@ const Main = () => (
 <Container>
         <Route  path={ROUTES.REGISTER} component={RegisterFormA} />
         <Route path={ROUTES.REGISTER_B} component={RegisterFormB}/>
+
+        <Route path={ROUTES.RESET_PASSWORD} component={ResetPassword} />    
         
-        <Route path={ROUTES.PLEASE_CONFIRM_EMAIL} component={ConfirmEmailAddress} />      
-        <Route path={ROUTES.PLEASE_CONFIRM_EMAIL_B} component={ConfirmEmailAddressB} />      
+        <Route path={ROUTES.PLEASE_CONFIRM_EMAIL} component={ActivateAccountMessage} />      
+        <Route path={ROUTES.PLEASE_CONFIRM_EMAIL_B} component={ActivateAccountMessageB} />      
         
-        <Route  path={ROUTES.EMAIL_CONFIRMED_SUCCESS} component={EmailConfirmedPage} />  
-        <Route  path={ROUTES.EMAIL_CONFIRMED_SUCCESS_B} component={EmailConfirmedPageB} />  
+        <Route  path={ROUTES.EMAIL_CONFIRMED_SUCCESS} component={EmailConfirmed} />  
+        <Route  path={ROUTES.EMAIL_CONFIRMED_SUCCESS_B} component={EmailConfirmedB} />  
 
         <PrivateRouteTypeA exact path={ROUTES.ACCOUNT} component={AccountPage}/>      
         <PrivateRouteTypeB path={ROUTES.ACCOUNT_B} component={AccountPageB}/>      
         
 
-        <Route path={ROUTES.LOGIN} component={LoginPage} />
+        <Route path={ROUTES.LOGIN} component={Login} />
         <Route path={ROUTES.LOGOUT} component={LogoutPage} />
         <Route exact path={ROUTES.HOME} component={HomePage} />
         
         
-        <Route path={ROUTES.RESET_PASSWORD} component={ResetPasswordPage} />      
+        
   </Container>
   </ErrorBoundary>
 
@@ -78,7 +83,7 @@ const Header = () => (
             {  authUser ? <NavigationAuth />: <NavigationNonAuth />}          
           </Navbar.Nav>   
           {authUser &&        
-          <Navbar.Text><AccountLink style={{textDecoration:'none'}}><img src="/images/avatar.png" style={{height:'18px'}} alt="profile img"/> { authUser.displayName?authUser.displayName:'' }</AccountLink></Navbar.Text> 
+          <Navbar.Text><AccountLink accountRouteB={ROUTES.ACCOUNT_B} accountRoute={ROUTES.ACCOUNT} style={{textDecoration:'none'}}><img src="/images/avatar.png" style={{height:'18px'}} alt="profile img"/> { authUser.displayName?authUser.displayName:'' }</AccountLink></Navbar.Text> 
           } 
         </Collapse>
       </Navbar>  
@@ -94,7 +99,7 @@ const Header = () => (
 const NavigationAuth = () => (
   <>  
   <LinkContainer to={ROUTES.LOGOUT}><Nav.ItemLink>Logout</Nav.ItemLink></LinkContainer>
-  <AccountLinkContainer ><Nav.ItemLink>My Profile</Nav.ItemLink></AccountLinkContainer>  
+  <AccountLinkContainer accountRouteB={ROUTES.ACCOUNT_B} accountRoute={ROUTES.ACCOUNT} ><Nav.ItemLink>My Profile</Nav.ItemLink></AccountLinkContainer>  
   </> 
 );
 
@@ -105,15 +110,8 @@ const NavigationNonAuth = () => (
   <LinkContainer to={ROUTES.LOGIN}><Nav.ItemLink>Login </Nav.ItemLink></LinkContainer>  
   <LinkContainer to={ROUTES.ACCOUNT}><Nav.ItemLink>Account type A</Nav.ItemLink></LinkContainer>  
   <LinkContainer to={ROUTES.ACCOUNT_B}><Nav.ItemLink>Account type B</Nav.ItemLink></LinkContainer>  
-  {/* <Nav.Item dropdown>
-              <Nav.Link dropdownToggle>Drop down</Nav.Link>
-              <Dropdown.Menu>
-                <Dropdown.Item>Go here</Dropdown.Item>
-                <Dropdown.Item>Go there</Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item>Somewhere else</Dropdown.Item>
-              </Dropdown.Menu>
-            </Nav.Item> */}
+ 
+
   
   </>
 );

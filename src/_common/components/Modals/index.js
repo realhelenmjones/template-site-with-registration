@@ -1,6 +1,9 @@
 import React from 'react';
 
+import PropTypes from "prop-types";
+
 import { Modal, Button } from 'bootstrap-4-react';
+import './styles.css'
 
 export const AlertModal = ({ id, title, children }) => (
     <Modal id={id} fade>
@@ -12,11 +15,16 @@ export const AlertModal = ({ id, title, children }) => (
                         <span aria-hidden="true">&times;</span>
                     </Modal.Close>
                 </Modal.Header>
-                <Modal.Body style={{ textAlign: 'center' }}>
+                <Modal.Body className="Modal_COMP_Body">
                     {children}
-                    <div style={{ textAlign: 'right' }}><Button primary="true" data-dismiss="modal">Ok</Button></div>                    
+                    <div className="Modal_COMP_ButtonBar"><Button primary="true" data-dismiss="modal">Ok</Button></div>                    
                 </Modal.Body>
             </Modal.Content>
         </Modal.Dialog>
     </Modal>
 )
+
+AlertModal.propTypes = {
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,    
+};
