@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import { TextArea, TextInput, RadioGroup, Select, Checkbox, CheckboxSingle } from '_common/util/formik-bootstrap-controls'
 
 import * as ROUTES from 'constants/routes';
-import RegisterForm from '../../_registration/components/tmp-register/register-form'
+import RegisterForm from '../../_registration/components/register/register-form'
 import userService from '_registration/services/UserService';
 
 const INITIAL_FORM_VALUES = {

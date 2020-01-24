@@ -13,7 +13,7 @@ import ErrorBoundary  from '_common/util/ErrorBoundary'
 import HomePage from '../tmp-home'
 import AccountPage from '../tmp-account';
 import AccountPageB from '../tmp-accountB';
-import LogoutPage from '_registration/components/tmp-logout'
+import LogoutPage from '_registration/components/logout'
 import ResetPassword from '_registration/components/reset-password'
 import {AccountLink,AccountLinkContainer} from '_registration/components/dual-reg-links'
 import {RegisterFormA,RegisterFormB,ActivateAccountMessage, ActivateAccountMessageB, 
