@@ -86,8 +86,7 @@ class LoginFormBase extends Component {
 
     const { email, password, error, loading } = this.state;
     return (
-      <>
-        <h1 className="formHeading">Login</h1>
+      <>        
         <SpinnerOverlay loading={loading}>
           <div className="formContainer">
             <Form onSubmit={this.onSubmit} method='POST'>
