@@ -10,7 +10,7 @@ import Form from '_form'
 
 import { TextInput } from '_common/util/formik-bootstrap-controls'
 
-import { AuthUserContext } from '_registration/util/tmp-session';
+import { AuthUserContext } from '_registration/util/session';
 import userService from '_registration/services/UserService'
 import ma from '_common/util/missingArg';
 
