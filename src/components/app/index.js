@@ -10,9 +10,9 @@ import {PrivateRouteTypeA,PrivateRouteTypeB} from '_registration/util/tmp-privat
 import { AuthUserContext,withAuthentication } from '_registration/util/tmp-session';
 import ErrorBoundary  from '_common/util/ErrorBoundary'
 
-import HomePage from '../tmp-home'
-import AccountPage from '../tmp-account';
-import AccountPageB from '../tmp-accountB';
+import HomePage from '../home'
+import AccountPage from '../account';
+import AccountPageB from '../accountB';
 import LogoutPage from '_registration/components/logout'
 import ResetPassword from '_registration/components/reset-password'
 import {AccountLink,AccountLinkContainer} from '_registration/components/dual-reg-links'
