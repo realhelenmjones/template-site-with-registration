@@ -13,7 +13,7 @@ const HomePage = () => (
           <Col col="sm">
           <Card text="center">
         <Card.Header ><b>Who?</b></Card.Header>
-        <Card.Image src="/images/pilica-poland-may-1-2019-250nw-1388572649.jpg" top/>
+        <Card.Image src="/images/solid_blue.png" top/>
         <Card.Body>
           <Card.Text>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit
@@ -24,7 +24,7 @@ const HomePage = () => (
 <Col col="sm">
           <Card text="center">
         <Card.Header ><b>Why?</b></Card.Header>
-        <Card.Image src="/images/farmer-organic-tomato-crop-on-250nw-340650272.jpg" top/>
+        <Card.Image src="/images/solid_yellow.png" top/>
         <Card.Body>
           <Card.Text>
           Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit. 
@@ -35,7 +35,7 @@ const HomePage = () => (
 <Col col="sm">
           <Card text="center">
         <Card.Header ><b>What?</b></Card.Header>
-        <Card.Image src="/images/window-view-lonely-tree-camper-250nw-1388572655.jpg" top/>
+        <Card.Image src="/images/solid_pink.png" top/>
         <Card.Body>
           <Card.Text>
           Donec lobortis risus a elit. Etiam tempor. Ut ullamcorper, ligula eu tempor congue, eros est euismod turpis, id tincidunt sapien risus a quam.
