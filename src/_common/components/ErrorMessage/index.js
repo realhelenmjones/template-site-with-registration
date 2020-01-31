@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from "prop-types";
 
 import ma from '_common/util/missingArg';
-// import { c_error,c_log } from '_common/util/logger';
+import { c_error,c_log } from '_common/util/logger';
 
 
 

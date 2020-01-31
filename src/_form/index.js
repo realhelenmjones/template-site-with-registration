@@ -14,7 +14,7 @@ import ErrorMessage from '_common/components/ErrorMessage'
 
 
 import SpinnerOverlay from '_common/util/SpinnerOverlay'
-// import {c_log} from '_common/util/logger'
+import {c_error} from '_common/util/logger'
 
 
 
@@ -78,6 +78,7 @@ class FormComponent extends React.Component {
                                     });
                             }
                             catch (error) {
+                                c_error(error);
                                 this.setState({ ...INITIAL_STATE, error });
                             }
 

@@ -15,4 +15,17 @@ const WarnIcon = (props) =>{
     return (<img className="big" src="/images/warn.png"  alt="warn" {...props}/>)
    }
 
-export {ArmStrength,EditIcon, WarnIcon}
+   const FlagIcon = (props) =>{
+    return (<img className="flag" src="/images/union-jack.png"  alt="GB" {...props}/>)
+   }
+
+
+   const QLeftIcon = (props) =>{
+    return (<img className="quote" src="/images/quote-left-50.png"  alt="quote left" {...props}/>)
+   }
+
+   const QRightIcon = (props) =>{
+    return (<img className="quote" src="/images/quote-right-50.png"  alt="quote right" {...props}/>)
+   }
+
+   export {ArmStrength,EditIcon, WarnIcon, FlagIcon, QLeftIcon, QRightIcon}

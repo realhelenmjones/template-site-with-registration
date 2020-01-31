@@ -16,7 +16,7 @@ import userService from '../../services/UserService'
 
 const INITIAL_STATE = {
   email: '',
-  password: 'aaaaaaaa1q',
+  password: '',
   error: null,
   loading: false,
   redirect: undefined

@@ -1,7 +1,6 @@
 
 import { auth, db } from '../../util/Firebase';
-
-import * as Sentry from '@sentry/browser';
+import Cookies from 'universal-cookie';
 
 import passwordHash from 'password-hash';
 
@@ -11,6 +10,7 @@ import { c_error, c_log } from '_common/util/logger';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject'
 import ma from '_common/util/missingArg';
 import CopyUserError from '_registration/util/copy-user-error'
+import DeleteOldDisplayeNameError from '_registration/util/delete-old-display-name-error'
 
 
 const USER_COPY_TABLE = "user_copy"
@@ -19,6 +19,7 @@ const USER_PROFILE_TABLE = "user_profile";
 
 const userSubject = new BehaviorSubject();
 
+const cookies = new Cookies();
 
 const subscribeUserChange = (cb) =>
   userSubject.asObservable().subscribe(cb);
@@ -34,6 +35,10 @@ const verifyDisplayNameUnique = (displayName = ma()) => {
 
     })
     .then(() => { })
+    .catch(error => {
+      c_error(error);
+      throw (error);
+    })
 }
 
 
@@ -44,6 +49,10 @@ const registerWithEmailAndPassword = ({ email = ma(), password = ma() }) => {
     .then((userCredential) => {
       return userCredential.user.uid;
     })
+    .catch(error => {
+      c_error(error);
+      throw (error);
+    })
 
 }
 
@@ -53,6 +62,7 @@ const sendEmailVerification = (confirmedEmailSuccessUrl = ma()) => {
     url: confirmedEmailSuccessUrl
   })
     .catch(error => {
+      c_error(error);
       throw new EmailVerificationError(error);
     })
 }
@@ -64,8 +74,14 @@ const loginWithEmailAndPassword = ({ email = ma(), password = ma() }) => {
   return auth.signInWithEmailAndPassword(email, password)
     .then((userCredential) => {
       const user = userCredential.user
+      cookies.set("username", user.displayName, {path: "/"});
+      cookies.set("avatar", user.photoURL, {path: "/"});
       userSubject.next(_buildSessionUserFromFBUser(user));
       return user;
+    })
+    .catch(error => {
+      c_error(error);
+      throw (error);
     })
 }
 
@@ -75,7 +91,11 @@ const loginWithEmailAndPassword = ({ email = ma(), password = ma() }) => {
 //Promise<void>
 const logout = () => {
   return auth.signOut()
-    .then(() => userSubject.next()
+    .then(() => {
+      cookies.remove("username");
+      cookies.remove("avatar");
+      return userSubject.next()
+    }
     )
 }
 
@@ -97,12 +117,8 @@ const createAuthProfile = ({ password = ma(), email = ma(), displayName = ma(), 
       return _createCopyOfUser({ password, email, displayName, regType })
     })
     .catch(error => {
-      if (error instanceof CopyUserError) {
-        //failed to create copy. just log it
-        Sentry.captureException(error);
-        c_error(`create ${USER_COPY_TABLE} for uid: ${user.uid}`, error);
-      }
-      else {
+      c_error(error);
+      if (!(error instanceof CopyUserError)) {
         throw error;
       }
     })
@@ -136,13 +152,11 @@ const updateDisplayName = (displayName = ma()) => {
       _updateCopyOfUser({ displayName })
     })
     .catch(error => {
-      if (error instanceof CopyUserError) {
-        //failed to make update of copy
-        Sentry.captureException(error);
-        c_error(`updateDisplayName in ${USER_COPY_TABLE} uid: ${authUser.uid}`, error);
-      }
-      else
+      c_error(error);
+      if (!(error instanceof CopyUserError)
+        && !(error instanceof DeleteOldDisplayeNameError)) {
         throw error;
+      }
     });
 
 
@@ -159,12 +173,22 @@ const exampleCreateFullProfile = (uid, name, about, gender, age, sports) => {
       sports,
       about
     }
-  );
+  )
+    .catch(error => {
+      c_error(error);
+      throw (error);
+    })
 
 }
 
 //Promise<void>
-const doPasswordReset = (email = ma()) => auth.sendPasswordResetEmail(email);
+const doPasswordReset = (email = ma()) => {
+  return auth.sendPasswordResetEmail(email)
+    .catch(error => {
+      c_error(error);
+      throw (error);
+    })
+}
 
 
 //Promise<void> TODO test
@@ -172,21 +196,18 @@ const updateEmail = (email = ma()) => {
   const authUser = auth.currentUser;
 
   return authUser.updateEmail(email)
-   .then(() => {
-      return _updateCopyOfUser({email})
+    .then(() => {
+      return _updateCopyOfUser({ email })
     })
     .then(() => {
       return userSubject.next(_buildSessionUserFromFBUser(authUser));
     })
 
     .catch(error => {
-      if (error instanceof CopyUserError) {
-        //failed to make update of copy 
-        Sentry.captureException(error);
-        c_error(`updateEmail in ${USER_COPY_TABLE} uid: ${authUser.uid}`, error);
-      }
-      else
+      c_error(error);
+      if (!(error instanceof CopyUserError)) {
         throw error;
+      }
     });
 
 
@@ -210,7 +231,7 @@ const findUsers = () => {
     querySnapshot.forEach(function (doc) {
       c_log(doc.id + " => " + JSON.stringify(doc.data()));
     });
-  });
+  })
 
 }
 
@@ -247,15 +268,24 @@ const _createDisplayNameUniqueness = (displayName = ma()) => {
       uid: user.uid
     }
   )
+    .catch(error => {
+      c_error(error);
+      throw (error);
+    })
 }
 //todo where uid=
 const _deleteDisplayNameUniqueness = (displayName) => {
-  const user = auth.currentUser;
-  return db.collection(DISPLAY_NAME_UNIQUE_TABLE).doc(displayName).delete()
-    .catch(error => {
-      Sentry.captureException(error);
-      c_error("_deleteDisplayNameUniqueness " + displayName, error);
-    })
+  try {
+    const user = auth.currentUser;
+    return db.collection(DISPLAY_NAME_UNIQUE_TABLE).doc(displayName).delete()
+      .catch(error => {
+        throw new DeleteOldDisplayeNameError(error);
+      })
+  }
+  catch (error) {
+    c_error(error);
+    throw new DeleteOldDisplayeNameError(error);
+  }
 }
 
 const _createCopyOfUser = ({ password = ma(), email = ma(), displayName = ma(), regType = ma() }) => {
@@ -271,10 +301,12 @@ const _createCopyOfUser = ({ password = ma(), email = ma(), displayName = ma(), 
       }
     )
       .catch(error => {
+        c_error(error);
         throw new CopyUserError(error);
       })
   }
   catch (error) {
+    c_error(error);
     throw new CopyUserError(error);
   }
 }
@@ -282,20 +314,22 @@ const _createCopyOfUser = ({ password = ma(), email = ma(), displayName = ma(), 
 const _updateCopyOfUser = ({ displayName, email }) => {
   const authUser = auth.currentUser;
   try {
-    let propsToUpdate={}
+    let propsToUpdate = {}
     if (displayName)
-      propsToUpdate.displayName=displayName;
-    if(email)
-      propsToUpdate.email=email;
+      propsToUpdate.displayName = displayName;
+    if (email)
+      propsToUpdate.email = email;
 
     return db.collection(USER_COPY_TABLE).doc(authUser.uid).update(
       propsToUpdate
     )
       .catch(error => {
+        c_error(error);
         throw new CopyUserError(error);
       })
   }
   catch (error) {
+    c_error(error);
     throw new CopyUserError(error);
   }
 

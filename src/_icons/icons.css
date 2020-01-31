@@ -1,10 +1,18 @@
-.icon, .icon-action {
+img.icon, img.icon-action {
     width:1rem;     
 }
 
-.icon-action {
+img.icon-action {
     cursor:pointer;
 }
-.big{
+img.big{
+    width:2rem;
+}
+
+img.flag{
+    width:40px;    
+}
+
+img.quote{
     width:2rem;
 }

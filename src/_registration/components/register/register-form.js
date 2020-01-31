@@ -4,7 +4,7 @@ import { withRouter, Redirect } from 'react-router-dom';
 import PropTypes from "prop-types";
 import urlPropType from 'url-prop-type';
 
-import * as Sentry from '@sentry/browser';
+
 import { Button, Alert } from 'bootstrap-4-react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -17,12 +17,12 @@ import ErrorMessage from '_common/components/ErrorMessage';
 
 import SpinnerOverlay from '_common/util/SpinnerOverlay'
 import { c_error } from '_common/util/logger';
-// import {c_log} from '_common/util/logger'
+// import { c_log } from '_common/util/logger'
 
 const INITIAL_FORM_VALUES = {
     email: '',
-    passwordOne: 'aaaaaaaa1q',
-    passwordTwo: 'aaaaaaaa1q',
+    passwordOne: '',
+    passwordTwo: '',
     displayName: ''
 };
 
@@ -65,13 +65,12 @@ class RegisterFormBase extends React.Component {
     render() {
         const { error, loading } = this.state;
         const { initialFormValues = {}, validationScheme = {}, regType = "A",
-        pleaseConfirmEmail, confirmedEmailSuccessUrl, 
+            pleaseConfirmEmail, confirmedEmailSuccessUrl,
             submitLabel = "Register", createFullProfile } = this.props;
 
 
         return (
             <>
-                
                 <Formik
                     initialValues={{ ...INITIAL_FORM_VALUES, ...initialFormValues }}
                     validationSchema={() => Yup.object().shape({ ...VALIDATION_SCHEMA, ...validationScheme })}
@@ -84,14 +83,13 @@ class RegisterFormBase extends React.Component {
 
 
                             setSubmitting(false);
-
+                            
                             userService
                                 .verifyDisplayNameUnique(displayName)
                                 .then(() =>
                                     userService.registerWithEmailAndPassword({ email, password: passwordOne })
                                 )
-                                .then(uid => {
-
+                                .then(uid => {                                    
                                     return userService.createAuthProfile({
                                         password: passwordOne,
                                         email,
@@ -99,8 +97,6 @@ class RegisterFormBase extends React.Component {
                                         regType
                                     }
                                     );
-
-
                                 })
                                 .then((uid) => {
                                     if (createFullProfile) {
@@ -111,15 +107,12 @@ class RegisterFormBase extends React.Component {
                                     }
                                 })
                                 .then(() => {
-                                    return userService.sendEmailVerification(confirmedEmailSuccessUrl);                                 
-                                })                                
+                                    return userService.sendEmailVerification(confirmedEmailSuccessUrl);
+                                })
                                 .catch(error => {
-                                    if (error instanceof EmailVerificationError) {
-                                        Sentry.captureException(error);
-                                        c_error(error);
+                                    if (!(error instanceof EmailVerificationError)) {                                        
+                                        throw (error);
                                     }
-                                    else
-                                        throw(error);                                 
                                 })
                                 .then(() => {
                                     pleaseConfirmEmail();
@@ -130,6 +123,7 @@ class RegisterFormBase extends React.Component {
 
                         }
                         catch (error) {
+                            c_error(error);
                             this.setState({ error, loading: false });
                         }
                     }}
@@ -172,7 +166,7 @@ RegisterFormBase.propTypes = {
     initialFormValues: PropTypes.object.isRequired,
     regType: PropTypes.string,
     pleaseConfirmEmail: PropTypes.func.isRequired,
-    confirmedEmailSuccessUrl: urlPropType.isRequired,    
+    confirmedEmailSuccessUrl: urlPropType.isRequired,
     submitLabel: PropTypes.string,
     createFullProfile: PropTypes.func
 };
